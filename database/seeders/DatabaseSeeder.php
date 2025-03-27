@@ -30,7 +30,8 @@ class DatabaseSeeder extends Seeder
             CategoriaSeeder::class,
             UnidadSeeder::class,
             MenuSeeder::class,
-            TipoDocumentoSeeder::class
+            TipoDocumentoSeeder::class,
+            SectorSeeder::class,
         ]);
     }
 }

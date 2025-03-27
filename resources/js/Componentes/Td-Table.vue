@@ -25,12 +25,12 @@ const props = defineProps({
 
 <template>
     <td class="p-4 text-xs font-thin text-gray-900 whitespace-nowrap dark:text-white">
-        Creado: {{ props.creado }}
+        <small>Creado: </small> <b>{{ props.creado }}</b>
         <br/>
-        Actualizado: {{ props.actualizado }}
-        <br/>
+<!--        <small>Actualizado: </small> {{ props.actualizado }}-->
+<!--        <br/>-->
         <a :href="route(props.model_path + '.edit', props.itemId)"
-           class="inline-flex items-center px-3 py-2 text-xs font-thin text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+           class="inline-flex items-center px-3 py-2 mr-2 mt-2 text-xs font-thin text-center text-white rounded-lg bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
             <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20"
                  xmlns="http://www.w3.org/2000/svg">
                 <path

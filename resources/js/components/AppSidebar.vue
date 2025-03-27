@@ -6,7 +6,6 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import MenuService from '@/Services/MenuService';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder } from 'lucide-vue-next';
 import { onMounted, reactive } from 'vue';
 import AppLogo from './AppLogo.vue';
 
@@ -23,12 +22,10 @@ const datas = reactive({
 });
 
 onMounted(() => {
-    console.log('cargando pagina menu');
     //console.log('mounted');
     MenuService.query('')
         .then((response) => {
             // como agregar a mainNavItems
-            console.log(response.data);
             datas.menus = response.data.data;
         })
         .catch((error) => {
@@ -39,7 +36,7 @@ onMounted(() => {
 
 
 const footerNavItems: NavItem[] = [
-    {
+    /*{
         title: 'Github Repo',
         href: 'https://github.com/laravel/vue-starter-kit',
         icon: Folder,
@@ -48,7 +45,7 @@ const footerNavItems: NavItem[] = [
         title: 'Documentation',
         href: 'https://laravel.com/docs/starter-kits',
         icon: BookOpen,
-    },
+    },*/
 ];
 </script>
 

@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Spatie\Permission\Models\Permission;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Permissions>
@@ -17,7 +18,8 @@ class PermissionsFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+
+
         ];
     }
 }

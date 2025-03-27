@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Services\PermissionService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRolesRequest extends FormRequest
@@ -11,8 +12,7 @@ class StoreRolesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
-    }
+        return PermissionService::havePermission('roles-store');    }
 
     /**
      * Get the validation rules that apply to the request.

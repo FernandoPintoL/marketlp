@@ -16,9 +16,9 @@ const props = defineProps({
 
 <template>
     <a v-if="props.crear" :href="route(model_path+'.create')"
-          :id="'create-'+model_path"
+          :id="'create-'+props.model_path"
           class="self-start text-white bg-sky-700 hover:bg-sky-800 focus:ring-4 focus:ring-sky-300 font-thin rounded-lg text-xs px-4 py-2 dark:bg-sky-600 dark:hover:bg-sky-700 focus:outline-none dark:focus:ring-sky-800">
-        NUEVO - {{ model_path.toUpperCase() }}
+        NUEVO - {{ props.model_path.toUpperCase() }}
     </a>
 </template>
 

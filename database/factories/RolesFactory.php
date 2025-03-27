@@ -2,7 +2,10 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Roles>
@@ -17,7 +20,8 @@ class RolesFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+
+
         ];
     }
 }

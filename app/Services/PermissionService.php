@@ -5,6 +5,20 @@ use Illuminate\Support\Facades\Auth;
 
 class PermissionService
 {
+    public static function havePermission($permiso)
+    {
+        $user = Auth::user();
+        // verificar si el usuario tiene permisos de super admin
+        if ($user->hasRole('Super Admin')) {
+            return true;
+        }
+        // verificar si el usuario tiene permisos para la ruta
+        if (!$user->can($permiso)) {
+            abort(403);
+        }
+        return true;
+    }
+
     public static function getPermissions($rutaVisita)
     {
         $user = Auth::user();

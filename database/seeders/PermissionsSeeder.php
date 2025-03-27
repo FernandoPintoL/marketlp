@@ -14,6 +14,7 @@ class PermissionsSeeder extends Seeder
     public function run(): void
     {
         $arrays_permisos = [
+            'ajuste',
             'almacen',
             'categoria',
             'cliente',

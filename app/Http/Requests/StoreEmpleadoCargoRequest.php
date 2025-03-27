@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Services\PermissionService;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreEmpleadoCargoRequest extends FormRequest
@@ -11,7 +12,7 @@ class StoreEmpleadoCargoRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return PermissionService::havePermission('empleado-cargo-store');
     }
 
     /**
