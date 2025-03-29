@@ -5,15 +5,31 @@ namespace App\Http\Controllers;
 use App\Models\Permissions;
 use App\Http\Requests\StorePermissionsRequest;
 use App\Http\Requests\UpdatePermissionsRequest;
+use App\Services\PermissionService;
+use App\Services\ResponseService;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class PermissionsController extends Controller
 {
+    public Permissions $model;
+    public $rutaVisita = 'Permissions';
+    public function __construct()
+    {
+        $this->model = new Permissions();
+        /*$this->middleware('permission:almacen-list', ['only' => ['index', 'show']]);
+        $this->middleware('permission:almacen-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:almacen-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:almacen-delete', ['only' => ['destroy']]);*/
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render($this->rutaVisita . '/Index', array_merge([
+            'listado' => $this->model::all(),
+        ], PermissionService::getPermissions($this->rutaVisita)));
     }
 
     /**
@@ -21,7 +37,13 @@ class PermissionsController extends Controller
      */
     public function create()
     {
-        //
+        $permiso = strtolower($this->rutaVisita);
+        if (!Auth::user()->can($permiso.'-create')) {
+            abort(403);
+        }
+        return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
+            'isCreate' => true
+        ], PermissionService::getPermissions($permiso)));
     }
 
     /**
@@ -29,7 +51,12 @@ class PermissionsController extends Controller
      */
     public function store(StorePermissionsRequest $request)
     {
-        //
+        try {
+            $data = $this->model::create($request->all());
+            return ResponseService::success('Registro guardado correctamente', $data);
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al guardar el registro', $e->getMessage());
+        }
     }
 
     /**
@@ -45,7 +72,14 @@ class PermissionsController extends Controller
      */
     public function edit(Permissions $permissions)
     {
-        //
+        $permiso = strtolower($this->rutaVisita);
+        if (!Auth::user()->can($permiso.'-edit')) {
+            abort(403);
+        }
+        return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
+            'isCreate' => false,
+            'model' => $permissions,
+        ], PermissionService::getPermissions($permiso)));
     }
 
     /**
@@ -53,7 +87,12 @@ class PermissionsController extends Controller
      */
     public function update(UpdatePermissionsRequest $request, Permissions $permissions)
     {
-        //
+        try {
+            $permissions->update($request->all());
+            return ResponseService::success('Registro actualizado correctamente', $permissions);
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al actualizar el registro', $e->getMessage());
+        }
     }
 
     /**
@@ -61,6 +100,11 @@ class PermissionsController extends Controller
      */
     public function destroy(Permissions $permissions)
     {
-        //
+        try {
+            $permissions->delete();
+            return ResponseService::success('Registro eliminado correctamente');
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al eliminar el registro', $e->getMessage());
+        }
     }
 }

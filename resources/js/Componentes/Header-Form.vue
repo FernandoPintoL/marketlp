@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import UtilsServices from "../Services/UtilsServices.js";
+import { CalendarCog, CalendarDays } from 'lucide-vue-next';
 
 const props = defineProps({
     model_path: {
@@ -33,18 +34,20 @@ const props = defineProps({
         Editar {{ props.model_path }} | ID: {{ props.id_model }}
     </h5>
     <br v-if="props.fecha_creado.length > 0" />
-    <p v-if="props.fecha_creado.length > 0" class="inline-flex text-sm text-gray-900 dark:text-white">
-        <svg class="w-[17px] h-[17px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"/>
-        </svg>
-         Fecha de creación: {{ UtilsServices.fecha(props.fecha_creado) }}
+    <p v-if="props.fecha_creado.length > 0" class="inline-flex gap-2 justify-center text-sm text-gray-900 dark:text-white">
+        <small class="inline-flex">
+            <CalendarDays class="h-4 w-4 text-gray-800 dark:text-white" />
+            Creación:
+        </small>
+        {{ UtilsServices.fecha(props.fecha_creado) }}
     </p>
     <br v-if="props.fecha_creado.length > 0" />
-    <p v-if="props.fecha_actualizado.length > 0" class="inline-flex text-sm text-gray-900 dark:text-white">
-        <svg class="w-[17px] h-[17px] text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"/>
-        </svg>
-         Fecha de actualización: {{ UtilsServices.fecha(props.fecha_actualizado) }}
+    <p v-if="props.fecha_actualizado.length > 0" class="inline-flex gap-2 justify-center text-sm text-gray-900 dark:text-white">
+        <small class="inline-flex">
+            <CalendarCog class="h-4 w-4 text-gray-800 dark:text-white" />
+            Actualización:
+        </small>
+        {{ UtilsServices.fecha(props.fecha_actualizado) }}
     </p>
     <br v-if="props.fecha_actualizado.length > 0" />
 </template>

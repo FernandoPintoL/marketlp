@@ -28,10 +28,12 @@ class AlmacenController extends Controller
     {
         try {
             $queryStr = $request->get('query');
+            $perPage = $request->get('perPage', 10);
+            $page = $request->get('page', 1);
             $responsse = $this->model::where('sigla', 'LIKE', '%' . $queryStr . '%')
                 ->orWhere('detalle', 'LIKE', '%' . $queryStr . '%')
                 ->orderBy('id', 'ASC')
-                ->get();
+                ->paginate($perPage, ['*'], 'page', $page);
             $cantidad = count($responsse);
             $str = strval($cantidad);
             return ResponseService::success("$str datos encontrados", $responsse);

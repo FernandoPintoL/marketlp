@@ -103,8 +103,6 @@ class MenuSeeder extends Seeder
 
 
         foreach ($arrays_menus as $menu) {
-            //convertir la primer letra de una cadena en mayusculas
-            //$titulo  = ucfirst($menu['title']);
             Menu::create([
                 'title' => $menu['title'],
                 'href' =>  $menu['href'],

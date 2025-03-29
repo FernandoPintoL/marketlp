@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\{
+    AjustesController,
     AlmacenController,
     CategoriaController,
     ClienteController,
@@ -22,6 +23,7 @@ use App\Http\Controllers\{
 };
 
 $resources = [
+    'ajustes' => AjustesController::class,
     'almacen' => AlmacenController::class,
     'categoria' => CategoriaController::class,
     'cliente' => ClienteController::class,

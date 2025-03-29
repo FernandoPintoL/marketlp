@@ -5,11 +5,14 @@ class CategoriaService{
     async index(){
         return await axios.get('/api/'+this.path_url);
     }
-    async query(consulta, page, perPage){
+    async query(consulta, page, perPage, attributes){
+        console.log('Consulta: '+consulta);
+        console.log(attributes);
         const url = route(this.path_url+'.query', {
-            query: consulta.toUpperCase(),
+            query: consulta,
             page: page,
-            perPage: perPage
+            perPage: perPage,
+            attributes: attributes
         });
         return await axios.post(url);
     }

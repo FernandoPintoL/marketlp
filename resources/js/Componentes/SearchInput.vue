@@ -44,7 +44,7 @@ const refreshTable = () => {
                     @input="onSearchQuery"
                     name="search"
                     :id="'search-'+props.modelPath"
-                    class="px4 py-2 ps-10 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                    class="px-4 py-2 ps-10 bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                     :placeholder="'Buscar por '+props.modelPath+'s'" />
             </div>
         </div>
@@ -53,8 +53,8 @@ const refreshTable = () => {
                 <button type="button"
                         id="refresh-button"
                         @click="refreshTable"
-                        class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer bg-sky-900 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
-                    <svg class="w-6 h-6 text-gray-800 dark:text-white"
+                        class="inline-flex justify-center p-1 text-gray-500 rounded cursor-pointer bg-sky-900 hover:text-gray-900 hover:bg-sky-100 dark:text-gray-400 dark:hover:bg-sky-700 dark:hover:text-white">
+                    <svg class="w-4 h-4 text-white"
                          aria-hidden="true"
                          xmlns="http://www.w3.org/2000/svg"
                          width="24"

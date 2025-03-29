@@ -2,12 +2,42 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Http\Requests\StoreEmpresaRequest;
 use App\Http\Requests\UpdateEmpresaRequest;
+use App\Services\ResponseService;
+use Illuminate\Http\Request;
 
 class EmpresaController extends Controller
 {
+    public Empresa $model;
+    public $rutaVisita = 'Empresa';
+    public function __construct()
+    {
+        $this->model = new Empresa();
+        /*$this->middleware('permission:almacen-list', ['only' => ['index', 'show']]);
+        $this->middleware('permission:almacen-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:almacen-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:almacen-delete', ['only' => ['destroy']]);*/
+    }
+    public function query(Request $request)
+    {
+        try {
+            $queryStr = $request->get('query');
+            $perPage = $request->get('perPage', 10);
+            $page = $request->get('page', 1);
+            $responsse = $this->model::where('sigla', 'LIKE', '%' . $queryStr . '%')
+                ->orWhere('detalle', 'LIKE', '%' . $queryStr . '%')
+                ->orderBy('id', 'ASC')
+                ->paginate($perPage, ['*'], 'page', $page);
+            $cantidad = count($responsse);
+            $str = strval($cantidad);
+            return ResponseService::success("$str datos encontrados", $responsse);
+        } catch (\Exception $e) {
+            return ResponseService::error($e->getMessage(), '', $e->getCode());
+        }
+    }
     /**
      * Display a listing of the resource.
      */

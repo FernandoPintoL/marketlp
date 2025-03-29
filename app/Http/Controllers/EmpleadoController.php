@@ -5,15 +5,50 @@ namespace App\Http\Controllers;
 use App\Models\Empleado;
 use App\Http\Requests\StoreEmpleadoRequest;
 use App\Http\Requests\UpdateEmpleadoRequest;
+use App\Models\EmpleadoCargo;
+use App\Services\PermissionService;
+use App\Services\ResponseService;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class EmpleadoController extends Controller
 {
+    public Empleado $model;
+    public $rutaVisita = 'Empleado';
+    public function __construct()
+    {
+        $this->model = new Empleado();
+        /*$this->middleware('permission:almacen-list', ['only' => ['index', 'show']]);
+        $this->middleware('permission:almacen-create', ['only' => ['create', 'store']]);
+        $this->middleware('permission:almacen-edit', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:almacen-delete', ['only' => ['destroy']]);*/
+    }
+    public function query(Request $request)
+    {
+        try {
+            $queryStr = $request->get('query');
+            $perPage = $request->get('perPage', 10);
+            $page = $request->get('page', 1);
+            $responsse = $this->model::where('sigla', 'LIKE', '%' . $queryStr . '%')
+                ->orWhere('detalle', 'LIKE', '%' . $queryStr . '%')
+                ->orderBy('id', 'ASC')
+                ->paginate($perPage, ['*'], 'page', $page);
+            $cantidad = count($responsse);
+            $str = strval($cantidad);
+            return ResponseService::success("$str datos encontrados", $responsse);
+        } catch (\Exception $e) {
+            return ResponseService::error($e->getMessage(), '', $e->getCode());
+        }
+    }
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render($this->rutaVisita . '/Index', array_merge([
+            'listado' => $this->model::all(),
+        ], PermissionService::getPermissions($this->rutaVisita)));
     }
 
     /**
@@ -21,7 +56,13 @@ class EmpleadoController extends Controller
      */
     public function create()
     {
-        //
+        $permiso = strtolower($this->rutaVisita);
+        if (!Auth::user()->can($permiso.'-create')) {
+            abort(403);
+        }
+        return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
+            'isCreate' => true
+        ], PermissionService::getPermissions($permiso)));
     }
 
     /**
@@ -29,7 +70,12 @@ class EmpleadoController extends Controller
      */
     public function store(StoreEmpleadoRequest $request)
     {
-        //
+        try {
+            $data = $this->model::create($request->all());
+            return ResponseService::success('Registro guardado correctamente', $data);
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al guardar el registro', $e->getMessage());
+        }
     }
 
     /**
@@ -45,7 +91,14 @@ class EmpleadoController extends Controller
      */
     public function edit(Empleado $empleado)
     {
-        //
+        $permiso = strtolower($this->rutaVisita);
+        if (!Auth::user()->can($permiso.'-edit')) {
+            abort(403);
+        }
+        return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
+            'isCreate' => false,
+            'model' => $empleado,
+        ], PermissionService::getPermissions($permiso)));
     }
 
     /**
@@ -53,7 +106,12 @@ class EmpleadoController extends Controller
      */
     public function update(UpdateEmpleadoRequest $request, Empleado $empleado)
     {
-        //
+        try {
+            $empleado->update($request->all());
+            return ResponseService::success('Registro actualizado correctamente', $empleado);
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al actualizar el registro', $e->getMessage());
+        }
     }
 
     /**
@@ -61,6 +119,11 @@ class EmpleadoController extends Controller
      */
     public function destroy(Empleado $empleado)
     {
-        //
+        try {
+            $empleado->delete();
+            return ResponseService::success('Registro eliminado correctamente');
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al eliminar el registro', $e->getMessage());
+        }
     }
 }

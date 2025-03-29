@@ -2,11 +2,17 @@ import axios from "axios";
 import {route} from "ziggy-js";
 class ClienteService{
     path_url = 'cliente'; // Ruta API
+
     async index(){
         return await axios.get('/api/'+this.path_url);
     }
-    async query(consulta){
-        const url = route(this.path_url+'.query', {query: consulta.toUpperCase()});
+    async query(consulta, page, perPage, attributes){
+        const url = route(this.path_url+'.query', {
+            query: consulta.toUpperCase(),
+            page: page,
+            perPage: perPage,
+            attributes: attributes
+        });
         return await axios.post(url);
     }
     async store(model){
