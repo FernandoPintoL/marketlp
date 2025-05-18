@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('ajustes', function (Blueprint $table) {
             $table->id();
+            $table->string('sigla')->unique();
+            $table->string('detalle')->nullable();
             $table->timestamps();
         });
     }

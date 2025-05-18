@@ -12,6 +12,7 @@ class EmpleadoCargo extends Model
     protected $table = "empleado_cargos";
     protected $primaryKey = "id";
     protected $fillable = [
+        'id',
         'sigla',
         'detalle',
         'created_at',

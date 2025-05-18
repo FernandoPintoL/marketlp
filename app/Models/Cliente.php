@@ -12,6 +12,7 @@ class Cliente extends Model
     protected $table = "clientes";
     protected $primaryKey = "id";
     protected $fillable = [
+        'id',
         'name',
         'num_id',
         'tipo_documento_id',

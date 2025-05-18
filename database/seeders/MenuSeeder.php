@@ -75,7 +75,7 @@ class MenuSeeder extends Seeder
                 'icon' => "fa-solid fa-user-tie"
             ],
             [
-                'title' => 'Roles',
+                'title' => 'Role',
                 'href' => 'roles.index',
                 'icon' => "fa-solid fa-key"
             ],

@@ -12,6 +12,7 @@ class Roles extends Model
     protected $table = "roles";
     protected $primaryKey = "id";
     protected $fillable = [
+        'id',
         'name',
         'guard_name',
         'created_at',

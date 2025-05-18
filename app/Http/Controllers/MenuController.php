@@ -26,14 +26,50 @@ class MenuController extends Controller
     public function query(Request $request)
     {
         try {
-            $queryStr = $request->get('query');
-            $responsse = $this->model::where('title', 'LIKE', '%' . $queryStr . '%')
-                ->orWhere('href', 'LIKE', '%' . $queryStr . '%')
-                ->orderBy('id', 'ASC')
-                ->get();
-            $cantidad = count($responsse);
+            $queryStr = $request->get('query', '');
+            $perPage = $request->get('perPage', 10);
+            $page = $request->get('page', 1);
+            $attributes = $request->get('attributes', ['id']); // Atributos por defecto
+            $dateStart = $request->get('dateStart', '');
+            $dateEnd = $request->get('dateEnd', '');
+
+            // Obtener los atributos del modelo
+            $modelAttributes = $this->model->getFillable();
+
+            // Validar que los atributos estén en la lista de atributos permitidos
+            foreach ($attributes as $attribute) {
+                if (!in_array($attribute, $modelAttributes)) {
+                    return ResponseService::error('Atributo no permitido: ' . $attribute, '', 400);
+                }
+            }
+
+            // Construir la consulta dinámica
+            $query = $this->model::query();
+            $first = true;
+            // Filtrar por fechas solo created_at esta en el array de atributos
+            if (in_array('created_at', $attributes)) {
+                $query->whereBetween('created_at', [$dateStart, $dateEnd]);
+            }
+            if (in_array('updated_at', $attributes)) {
+                $query->whereBetween('updated_at', [$dateStart, $dateEnd]);
+            }
+            foreach ($attributes as $attribute) {
+                if ($first) {
+                    if (!in_array($attribute, ['created_at', 'updated_at'])) {
+                        $query->where($attribute, 'LIKE', '%' . $queryStr . '%');
+                    }
+                    $first = false;
+                } else {
+                    if (!in_array($attribute, ['created_at', 'updated_at'])) {
+                        $query->orWhere($attribute, 'LIKE', '%' . $queryStr . '%');
+                    }
+                }
+            }
+//            $response = $query->orderBy('id', 'ASC')->paginate($perPage, ['*'], 'page', $page);
+            $response = $query->orderBy('id', 'ASC')->get();
+            $cantidad = count($response);
             $str = strval($cantidad);
-            return ResponseService::success("$str datos encontrados", $responsse);
+            return ResponseService::success("$str datos encontrados con $queryStr", $response);
         } catch (\Exception $e) {
             return ResponseService::error($e->getMessage(), '', $e->getCode());
         }

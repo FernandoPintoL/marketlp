@@ -12,6 +12,7 @@ class Permissions extends Model
     protected $table = "permissions";
     protected $primaryKey = "id";
     protected $fillable = [
+        'id',
         'name',
         'guard_name',
         'created_at',

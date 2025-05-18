@@ -12,6 +12,7 @@ import { ref } from 'vue';
 const form = useForm({
     name: '',
     email: '',
+    usernick: '',
     password: '',
     password_confirmation: '',
 });
@@ -54,6 +55,11 @@ const togglePasswordVisibilityRepeat = () => {
                     <Label for="email">Email</Label>
                     <Input id="email" type="email" required :tabindex="2" autocomplete="email" v-model="form.email" placeholder="email@example.com" />
                     <InputError :message="form.errors.email" />
+                </div>
+                <div class="grid gap-2">
+                    <Label for="usernick">User Nick</Label>
+                    <Input id="usernick" type="text" required :tabindex="2" autocomplete="email" v-model="form.usernick" placeholder="user nick" />
+                    <InputError :message="form.errors.usernick" />
                 </div>
 
                 <div class="grid gap-2">

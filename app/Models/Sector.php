@@ -12,6 +12,7 @@ class Sector extends Model
     protected $table = "sectors";
     protected $primaryKey = "id";
     protected $fillable = [
+        'id',
         'sigla',
         'detalle',
         'maximo',

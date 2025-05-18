@@ -13,6 +13,7 @@ class AlertService{
     }
     error(message){
         return Swal.fire({
+            position: 'top-end',
             icon: 'error',
             title: this.error_text,
             text: message
@@ -20,6 +21,7 @@ class AlertService{
     }
     warning(message){
         return Swal.fire({
+            position: 'top-end',
             icon: 'warning',
             title: this.warning_text,
             text: message

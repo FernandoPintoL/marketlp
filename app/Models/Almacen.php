@@ -12,6 +12,7 @@ class Almacen extends Model
     protected $table = "almacens";
     protected $primaryKey = "id";
     protected $fillable = [
+        'id',
         'sigla',
         'detalle',
         'direccion',

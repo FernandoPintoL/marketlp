@@ -12,6 +12,7 @@ class Proveedor extends Model
     protected $table = "proveedors";
     protected $primaryKey = "id";
     protected $fillable = [
+        'id',
         'name',
         'num_id',
         'direccion',

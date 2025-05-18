@@ -5,14 +5,20 @@ class CategoriaService{
     async index(){
         return await axios.get('/api/'+this.path_url);
     }
-    async query(consulta, page, perPage, attributes){
-        console.log('Consulta: '+consulta);
-        console.log(attributes);
+    async query(consulta, page, perPage, attributes, dateStart, dateEnd){
+        console.log('consulta', consulta);
+        console.log('page', page);
+        console.log('perPage', perPage);
+        console.log('attributes', attributes);
+        console.log('dateStart', dateStart);
+        console.log('dateEnd', dateEnd);
         const url = route(this.path_url+'.query', {
             query: consulta,
             page: page,
             perPage: perPage,
-            attributes: attributes
+            attributes: attributes,
+            dateStart: dateStart,
+            dateEnd: dateEnd
         });
         return await axios.post(url);
     }

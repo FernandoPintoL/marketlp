@@ -25,6 +25,7 @@ onMounted(() => {
     //console.log('mounted');
     MenuService.query('')
         .then((response) => {
+
             // como agregar a mainNavItems
             datas.menus = response.data.data;
         })

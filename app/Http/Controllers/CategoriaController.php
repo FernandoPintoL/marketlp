@@ -18,52 +18,60 @@ class CategoriaController extends Controller
     public function __construct()
     {
         $this->model = new Categoria();
-        /*$this->middleware('permission:almacen-list', ['only' => ['index', 'show']]);
-        $this->middleware('permission:almacen-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:almacen-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:almacen-delete', ['only' => ['destroy']]);*/
     }
 
     public function query(Request $request)
     {
         try {
-            $queryStr = $request->get('query', '');
-            $perPage = $request->get('perPage', 10);
+            $queryStr = $request->get('query');
+            $perPage = $request->get('perPage', 5);
             $page = $request->get('page', 1);
-            $attributes = $request->get('attributes', ['sigla']); // Atributos por defecto
+            $attributes = $request->get('attributes', ['id']); // Atributos por defecto
+            $dateStart = $request->get('dateStart', '');
+            $dateEnd = $request->get('dateEnd', '');
 
             // Obtener los atributos del modelo
             $modelAttributes = $this->model->getFillable();
-            $modelAttributes[] = 'created_at';
-            $modelAttributes[] = 'updated_at';
 
             // Validar que los atributos estén en la lista de atributos permitidos
             foreach ($attributes as $attribute) {
                 if (!in_array($attribute, $modelAttributes)) {
-                    return ResponseService::error('Atributo no permitido: ' . $attribute, '', 400);
+                    return ResponseService::error('Atributo de busqueda no encontrado: ' . $attribute, 'Atributo de busqueda no encontrado: ' . $attribute, 400);
                 }
             }
 
-            // Construir la consulta dinámica
             $query = $this->model::query();
             $first = true;
             foreach ($attributes as $attribute) {
                 if ($first) {
-                    if (in_array($attribute, ['created_at', 'updated_at'])) {
-                        $query->whereDate($attribute, $queryStr);
-                    } else {
-                        $query->where($attribute, 'LIKE', '%' . $queryStr . '%');
+                    if (!in_array($attribute, ['created_at', 'updated_at'])) {
+                        if ($queryStr != '') {
+                            $query->where($attribute, 'LIKE', '%' . $queryStr . '%');
+                        }
+                    }else {
+                        if ($dateStart != '' && $dateEnd != '') {
+                            if (!strtotime($dateStart) || !strtotime($dateEnd)) {
+                                return ResponseService::error('Fecha de inicio o fin no válida', 'Fecha de inicio o fin no válida', 400);
+                            }
+                            $query->whereBetween($attribute, [$dateStart . " 00:00:00", $dateEnd . " 23:59:59"]);
+                        }
                     }
                     $first = false;
                 } else {
-                    if (in_array($attribute, ['created_at', 'updated_at'])) {
-                        $query->orWhereDate($attribute, $queryStr);
-                    } else {
-                        $query->orWhere($attribute, 'LIKE', '%' . $queryStr . '%');
+                    if (!in_array($attribute, ['created_at', 'updated_at'])) {
+                        if ($queryStr != '') {
+                            $query->orWhere($attribute, 'LIKE', '%' . $queryStr . '%');
+                        }
+                    }else {
+                        if ($dateStart != '' && $dateEnd != '') {
+                            if (!strtotime($dateStart) || !strtotime($dateEnd)) {
+                                return ResponseService::error('Fecha de inicio o fin no válida', 'Fecha de inicio o fin no válida', 400);
+                            }
+                            $query->whereBetween($attribute, [$dateStart . " 00:00:00", $dateEnd . " 23:59:59"]);
+                        }
                     }
                 }
             }
-
             $response = $query->orderBy('id', 'ASC')->paginate($perPage, ['*'], 'page', $page);
             $cantidad = count($response);
             $str = strval($cantidad);

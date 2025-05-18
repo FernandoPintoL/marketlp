@@ -13,8 +13,9 @@ import AlertService from '@/Services/AlertService.js';
 import CategoriaService from '@/Services/CategoriaService.js';
 import UtilsServices from '@/Services/UtilsServices.js';
 import { type BreadcrumbItem } from '@/types';
-import { Categoria } from '@/types/Categoria';
+import { attributesHead, Categoria, getDefaultAttributes, selectedAttributes } from '@/types/Categoria';
 import { Head } from '@inertiajs/vue3';
+import { Search } from 'lucide-vue-next';
 import { onMounted, reactive, ref } from 'vue';
 
 const model_service = CategoriaService;
@@ -49,8 +50,6 @@ const props = defineProps({
 const datas = reactive({
     list: [] as Array<Categoria>,
     isLoad: false,
-    dateStart: '',
-    dateEnd: '',
     siglaError: '',
     detalleError: '',
     currentPage: 1,
@@ -65,27 +64,27 @@ onMounted(() => {
 });
 
 const query = ref('');
-
-const selectedAttributes = reactive({
-    id: true,
-    sigla: true,
-    detalle: true,
-    created_at: false,
-    updated_at: false,
-} as Record<string, boolean>);
-
-const attributes = [
-    { key: 'id', label: 'ID', isSearch: true },
-    { key: 'sigla', label: 'Sigla', isSearch: true },
-    { key: 'detalle', label: 'Detalle', isSearch: true },
-    { key: 'acciones', label: 'Acciones', isSearch: false },
-];
+const dateStart = ref('');
+const dateEnd = ref('');
+const attributesHeadReactive = attributesHead;
+let selectedAttributesReactive = reactive(selectedAttributes);
 
 const fetchList = async (page = 1) => {
+    if (selectedAttributesReactive['created_at'] || selectedAttributesReactive['updated_at']) {
+        if (dateStart.value.length == 0 && dateEnd.value.length == 0) {
+            AlertService.error('Fecha de inicio y fecha final deben ser rellenadas');
+            return;
+        }
+        if (dateStart.value > dateEnd.value) {
+            AlertService.error('La fecha de inicio no puede ser mayor a la fecha de fin');
+            return;
+        }
+    }
+
     datas.isLoad = true;
-    const attributes = Object.keys(selectedAttributes).filter((attr) => selectedAttributes[attr]);
-    const response = await model_service.query(query.value, page, datas.perPage, attributes);
-    console.log('response', response);
+    const attributes = Object.keys(selectedAttributesReactive).filter((attr) => selectedAttributesReactive[attr]);
+    const response = await model_service.query(query.value, page, datas.perPage, attributes, dateStart.value, dateEnd.value);
+    console.log('response', response.data);
     if (response.data.isSuccess) {
         datas.list = response.data.data.data;
         datas.currentPage = response.data.data.current_page;
@@ -130,11 +129,14 @@ const handlePerPageChange = (perPage: number) => {
 
 const refreshTable = () => {
     query.value = '';
+    dateStart.value = '';
+    dateEnd.value = '';
     datas.perPage = 5;
     datas.currentPage = 1;
     datas.lastPages = 1;
     datas.totalItems = 0;
     datas.totalPages = 1;
+    selectedAttributesReactive = reactive({ ...getDefaultAttributes() });
     fetchList(datas.currentPage);
 };
 </script>
@@ -142,81 +144,150 @@ const refreshTable = () => {
 <template>
     <Head :title="UtilsServices.capitalizeFirstLetter(model_path)" />
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="p-4 sm:flex lg:mt-1.5">
-            <div class="mb-1 w-full">
+        <div class="p-4">
+            <div class="mb-1 mt-2 w-full">
                 <HeaderIndex :title="model_path" />
-                <div class="block items-center justify-between dark:divide-gray-700 sm:flex md:divide-x md:divide-gray-100">
+                <div class="flex flex-nowrap justify-start gap-6">
                     <SearchInput :model-path="model_path" v-model="query" @update:query="queryList" @refresh="refreshTable" />
                     <ButtonsAdd :model_path="model_path" :crear="props.crear" />
                 </div>
-                <div class="mt-3 block items-center sm:flex md:divide-x md:divide-gray-100">
-                    <div class="mr-2 inline-flex gap-2">
-
+                <hr class="mt-2" />
+                <div class="space-y-2 p-2 sm:flex sm:flex-nowrap sm:justify-start sm:gap-6">
+                    <div>
+                        <h3 class="text-pretty font-semibold">BUSQUEDA POR FECHAS</h3>
+                        <!--                        <input
+                                                    type="checkbox"
+                                                    id="created_at"
+                                                    class="peer hidden"
+                                                    v-model="selectedAttributesReactive['created_at']"
+                                                />
+                                                <label
+                                                    for="created_at"
+                                                    class="mb-2 flex cursor-pointer items-center text-sm font-medium text-gray-900 peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400"
+                                                >
+                                                    <div
+                                                        class="w-5 h-5 rounded-md border border-gray-300 bg-white peer-checked:border-indigo-600 peer-checked:bg-indigo-600 peer-checked:ring-2 peer-checked:ring-indigo-400"
+                                                    ></div>
+                                                    <span class="ml-2">Busqueda fecha de creación</span>
+                                                </label>-->
+                        <div class="mt-1.5 flex flex-nowrap justify-start gap-2">
+                            <div class="appearance-none">
+                                <label
+                                    for="created_at"
+                                    class="mb-2 flex cursor-pointer items-center text-sm font-medium peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400"
+                                >
+                                    <input
+                                        type="checkbox"
+                                        id="created_at"
+                                        class="h-5 w-5 appearance-none rounded-md border-2 border-gray-300 checked:border-indigo-600 checked:bg-indigo-600 focus:ring-2 focus:ring-indigo-500"
+                                        v-model="selectedAttributesReactive['created_at']"
+                                    />
+                                    <span class="ml-2 peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400">Busqueda fecha de creación</span>
+                                </label>
+                            </div>
+                            <div>
+                                <input
+                                    type="checkbox"
+                                    class="rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                                    id="updated_at"
+                                    v-model="selectedAttributesReactive['updated_at']"
+                                />
+                                <label for="updated_at" class="mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                    Busqueda fecha de actualización
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div
+                        v-show="selectedAttributesReactive['created_at'] || selectedAttributesReactive['updated_at']"
+                        class="flex flex-nowrap justify-start gap-6"
+                    >
+                        <div>
+                            <label for="start-time" class="text-sm font-medium text-gray-900 dark:text-white"> Fecha Inicio: </label>
+                            <input
+                                type="date"
+                                v-model="dateStart"
+                                id="start-time"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm leading-none text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                            />
+                        </div>
+                        <div>
+                            <label for="end-time" class="text-sm font-medium text-gray-900 dark:text-white"> Fecha Fin: </label>
+                            <input
+                                type="date"
+                                v-model="dateEnd"
+                                id="end-time"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm leading-none text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
+                            />
+                        </div>
+                        <button
+                            type="button"
+                            @click="fetchList(1)"
+                            class="rounded-md border border-blue-700 px-2 text-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
+                        >
+                            <Search class="h-4 w-4" />
+                        </button>
                     </div>
                 </div>
+                <hr />
             </div>
-        </div>
-        <div v-if="datas.isLoad">
-            <Loader />
-        </div>
-        <TableLayout>
-            <template #thead>
-                <tr>
-                    <th
-                        v-for="attr in attributes"
-                        :key="attr.key"
-                        scope="col"
-                        class="px-2 py-2 text-left"
-                    >
+            <div v-if="datas.isLoad">
+                <Loader />
+            </div>
+            <TableLayout>
+                <template #thead>
+                    <tr class="bg-gray-100 dark:bg-gray-700">
+                        <th v-for="attr in attributesHeadReactive" :key="attr.key" scope="col" class="px-2 py-2 text-left">
+                            <p v-if="!attr.isSearch">{{ attr.label }}</p>
+                            <label v-else>
+                                <input
+                                    type="checkbox"
+                                    class="rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                                    :id="attr.key"
+                                    :disabled="!attr.isSearch"
+                                    v-model="selectedAttributesReactive[attr.key]"
+                                />
+                                {{ attr.label }}
+                            </label>
+                        </th>
+                    </tr>
+                </template>
 
-                        <p v-if="!attr.isSearch">{{ attr.label }}</p>
-                        <label v-else >
-                            <input
-                                type="checkbox"
-                                class="rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                                :id="attr.key"
-                                :disabled="!attr.isSearch"
-                                v-model="selectedAttributes[attr.key]" />
-                            {{ attr.label }}
-                        </label>
-                    </th>
-                </tr>
-            </template>
-
-            <template #tbody>
-                <tr v-for="item in datas.list" :key="item.id" class="hover:bg-gray-100 dark:hover:bg-gray-700">
-                    <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                        {{ item.id }}
-                    </td>
-                    <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                        {{ item.sigla }}
-                    </td>
-                    <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                        {{ item.detalle }}
-                    </td>
-                    <TdTable
-                        :creado="UtilsServices.fecha(item.created_at)"
-                        :actualizado="UtilsServices.fecha(item.updated_at)"
-                        :model_path="model_path"
-                        :itemId="item.id"
-                        :onDelete="destroyMessage"
-                    ></TdTable>
-                </tr>
-            </template>
-        </TableLayout>
-        <Pagination
-            v-show="datas.list.length > 0"
-            :current-page="datas.currentPage"
-            :total-pages="datas.totalPages"
-            :total-items="datas.totalItems"
-            :last-pages="datas.lastPages"
-            :per-page="datas.perPage"
-            @page-changed="fetchList"
-            @per-page-changed="handlePerPageChange"
-        />
-        <div v-if="datas.list.length === 0">
-            <Alert v-if="query.length === 0" :message="'No se encontraron registros'" :path="model_path + '.create'" />
-            <Alert-Info v-else :message="'No se encontraron registros con: ' + query" />
+                <template #tbody>
+                    <tr v-for="item in datas.list" :key="item.id" class="hover:bg-gray-100 dark:hover:bg-gray-700">
+                        <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                            {{ item.id }}
+                        </td>
+                        <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                            {{ item.sigla }}
+                        </td>
+                        <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                            {{ item.detalle }}
+                        </td>
+                        <TdTable
+                            :creado="UtilsServices.fecha(item.created_at)"
+                            :actualizado="UtilsServices.fecha(item.updated_at)"
+                            :model_path="model_path"
+                            :itemId="item.id"
+                            :onDelete="destroyMessage"
+                        ></TdTable>
+                    </tr>
+                </template>
+            </TableLayout>
+            <Pagination
+                v-show="datas.list.length > 0"
+                :current-page="datas.currentPage"
+                :total-pages="datas.totalPages"
+                :total-items="datas.totalItems"
+                :last-pages="datas.lastPages"
+                :per-page="datas.perPage"
+                @page-changed="fetchList"
+                @per-page-changed="handlePerPageChange"
+            />
+            <div v-if="datas.list.length === 0">
+                <Alert v-if="query.length === 0" :message="'No se encontraron registros'" :path="model_path + '.create'" />
+                <Alert-Info v-else :message="'No se encontraron registros con: ' + query" />
+            </div>
         </div>
     </AppLayout>
 </template>

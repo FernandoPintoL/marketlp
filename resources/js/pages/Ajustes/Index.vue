@@ -15,6 +15,7 @@ import TableLayout from '@/Componentes/TableLayout.vue';
 import ButtonsAdd from '@/Componentes/ButtonsAdd.vue';
 import Pagination from '@/Componentes/Pagination.vue';
 import AjustesService from '@/Services/AjustesService';
+import { Ajuste } from '@/types/Ajuste';
 
 const model_service = AjustesService;
 const model_path = model_service.path_url;
@@ -28,7 +29,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps({
     listado: {
-        type: Array as () => Array<{ id: number, sigla: string, detalle: string, created_at: string, updated_at: string }>,
+        type: Array as () => Array<Ajuste>,
         default: () => [],
     },
     crear: {
@@ -46,12 +47,8 @@ const props = defineProps({
 });
 
 const datas = reactive({
-    list: [] as Array<{ id: number, sigla: string, detalle: string, created_at: string, updated_at: string }>,
+    list: [] as Array<Ajuste>,
     isLoad: false,
-    dateStart: '',
-    dateEnd: '',
-    messageList: '',
-    metodoList: '',
     siglaError: '',
     detalleError: '',
     currentPage: 1,
@@ -65,16 +62,32 @@ onMounted(() => {
     fetchList();
 });
 
-
 const query = ref('');
+const dateStart = ref('');
+const dateEnd = ref('');
+
+const selectedAttributes = reactive({
+    id: true,
+    sigla: true,
+    detalle: true,
+    created_at: false,
+    updated_at: false,
+} as Record<string, boolean>);
+
+const attributesHead = [
+    { key: 'id', label: 'ID', isSearch: true },
+    { key: 'sigla', label: 'Sigla', isSearch: true },
+    { key: 'detalle', label: 'Detalle', isSearch: true },
+    { key: 'acciones', label: 'Acciones', isSearch: false },
+];
 
 const fetchList = async (page = 1) => {
     datas.isLoad = true;
-    const response = await model_service.query(query.value, page, datas.perPage);
+    const attributes = Object.keys(selectedAttributes).filter((attr) => selectedAttributes[attr]);
+    const response = await model_service.query(query.value, page, datas.perPage, attributes, dateStart.value, dateEnd.value);
+    console.log('response', response.data);
     if (response.data.isSuccess) {
         datas.list = response.data.data.data;
-        datas.messageList = response.data.message;
-        datas.metodoList = query.value.length > 0 ? ' con: ' + query.value : '';
         datas.currentPage = response.data.data.current_page;
         datas.lastPages = response.data.data.last_page;
         datas.totalPages = response.data.data.last_page;

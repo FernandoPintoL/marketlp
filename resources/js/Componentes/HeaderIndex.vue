@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import {route} from "ziggy-js";
 const props = defineProps({
     title: {
         type: String,
@@ -9,8 +8,8 @@ const props = defineProps({
 </script>
 
 <template>
-    <div class="mb-4">
-        <nav class="flex mb-5" aria-label="Breadcrumb">
+    <div class="mb-2">
+<!--        <nav class="flex mb-5" aria-label="Breadcrumb">
             <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
                 <li class="inline-flex items-center">
                     <a :href="route('dashboard')" class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
@@ -25,8 +24,8 @@ const props = defineProps({
                     </div>
                 </li>
             </ol>
-        </nav>
-        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">{{ props.title.toUpperCase() }}S</h1>
+        </nav>-->
+        <p class="text-xs font-semibold text-gray-900 sm:text-2xl dark:text-white">{{ props.title.toUpperCase() }}S</p>
     </div>
 </template>
 

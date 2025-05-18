@@ -6,12 +6,14 @@ class ClienteService{
     async index(){
         return await axios.get('/api/'+this.path_url);
     }
-    async query(consulta, page, perPage, attributes){
+    async query(consulta, page, perPage, attributes, dateStart, dateEnd){
         const url = route(this.path_url+'.query', {
-            query: consulta.toUpperCase(),
+            query: consulta,
             page: page,
             perPage: perPage,
-            attributes: attributes
+            attributes: attributes,
+            dateStart: dateStart,
+            dateEnd: dateEnd
         });
         return await axios.post(url);
     }
