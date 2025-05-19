@@ -12,7 +12,6 @@ class Cliente extends Model
     protected $table = "clientes";
     protected $primaryKey = "id";
     protected $fillable = [
-        'id',
         'name',
         'num_id',
         'tipo_documento_id',
@@ -23,4 +22,8 @@ class Cliente extends Model
         'created_at',
         'updated_at'
     ];
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class, 'tipo_documento_id');
+    }
 }

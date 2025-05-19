@@ -31,6 +31,7 @@ class DatabaseSeeder extends Seeder
             UnidadSeeder::class,
             MenuSeeder::class,
             TipoDocumentoSeeder::class,
+            EmpleadoCargoSeeder::class,
             SectorSeeder::class,
         ]);
     }

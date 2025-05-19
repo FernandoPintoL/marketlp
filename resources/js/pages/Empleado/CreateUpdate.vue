@@ -7,10 +7,13 @@ import InputError from '@/components/InputError.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Head, useForm } from '@inertiajs/vue3';
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { route } from 'ziggy-js';
 import { Pencil, DiamondPlus } from 'lucide-vue-next';
 import EmpleadoService from '@/Services/EmpleadoService';
+import type { Empleado } from '@/types/Empleado';
+import type { EmpleadoCargo } from '@/types/EmpleadoCargo';
+import type { TipoDocumento } from '@/types/TipoDocumento';
 
 const model_service = EmpleadoService;
 const model_path = model_service.path_url;
@@ -24,7 +27,18 @@ const breadcrumbs: BreadcrumbItem[] = [
 ];
 
 const props = defineProps({
-    model: Object,
+    model: {
+        type: Object as () => Empleado | null,
+        default: null,
+    },
+    tipoDocumentos: {
+        type: Array as () => TipoDocumento[],
+        default: () => [],
+    },
+    empleadoCargos: {
+        type: Array as () => EmpleadoCargo[],
+        default: () => [],
+    },
     isCreate: {
         type: Boolean,
         default: false, // Valor por defecto puede ser true o false
@@ -45,48 +59,141 @@ const props = defineProps({
 
 const form = useForm({
     id: props.model != null ? props.model.id : '',
-    sigla: props.model != null ? props.model.sigla : '',
-    detalle: props.model != null ? props.model.detalle : '',
+    name: props.model != null ? props.model.name : '',
+    num_id: props.model != null ? props.model.num_id : '',
+    tipo_documento_id: props.model != null ? props.model.tipo_documento_id : '',
+    direccion: props.model != null ? props.model.direccion : '',
+    telefono: props.model != null ? props.model.telefono : '',
+    email: props.model != null ? props.model.email : '',
+    empleado_cargo_id: props.model != null ? props.model.empleado_cargo_id : '',
+    user_id: props.model != null ? props.model.user_id : '',
 });
 
+const tipoDocumentos = ref<TipoDocumento[]>(props.tipoDocumentos);
+const empleadoCargos = ref<EmpleadoCargo[]>(props.empleadoCargos);
+
 onMounted(() => {
+    tipoDocumentos.value = props.tipoDocumentos as TipoDocumento[];
+    empleadoCargos.value = props.empleadoCargos as EmpleadoCargo[];
     if (props.model != null) {
         form.id = props.model.id;
-        form.sigla = props.model.sigla;
-        form.detalle = props.model.detalle;
+        form.name = props.model.name;
+        form.num_id = props.model.num_id;
+        form.tipo_documento_id = props.model.tipo_documento_id;
+        form.direccion = props.model.direccion;
+        form.telefono = props.model.telefono;
+        form.email = props.model.email;
+        form.empleado_cargo_id = props.model.empleado_cargo_id;
+        form.user_id = props.model.user_id;
     }
 });
 
 const datas = reactive({
     isLoad: false,
-    siglaError: '',
-    detalleError: '',
+    nameError: '',
+    numIdError: '',
+    tipoDocumentoIdError: '',
+    direccionError: '',
+    telefonoError: '',
+    emailError: '',
+    empleadoCargoIdError: '',
+    userIdError: '',
     generalError: '',
 });
 
-const validateSigla = (e: Event) => {
+const inputs_ids = {
+    name: 'name',
+    numId: 'numId',
+    telefono: 'telefono',
+    email: 'email',
+    direccion: 'direccion',
+    tipo_documento_id: 'tipo_documento_id',
+    empleado_cargo_id: 'empleado_cargo_id',
+    userId: 'userId',
+}
+
+const validateName = (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (target.value.length === 0) {
         return;
     }
-    if (!validacion.validarSigla(target.value)) {
-        datas.siglaError = 'La sigla debe tener más de 2 caracteres y no contener caracteres especiales.';
+    if (!validacion.validarNombre(target.value)) {
+        datas.nameError = 'El nombre debe tener más de 2 caracteres y no contener caracteres especiales.';
     } else {
-        form.sigla = target.value;
-        datas.siglaError = '';
+        form.name = target.value;
+        datas.nameError = '';
     }
 };
-
-const validateDetalle = (e: Event) => {
-    const target = e.target as HTMLTextAreaElement;
+const validateNumId = (e: Event) => {
+    const target = e.target as HTMLInputElement;
     if (target.value.length === 0) {
         return;
     }
-    if (!validacion.validarDetalle(target.value)) {
-        datas.detalleError = 'El detalle debe tener más de 2 caracteres, sin caracteres especiales.';
+    if (!validacion.validarNumero(target.value)) {
+        datas.numIdError = 'El número de identificación debe tener entre 5 y 20 caracteres y no contener caracteres especiales.';
     } else {
-        form.detalle = target.value;
-        datas.detalleError = '';
+        form.num_id = target.value;
+        datas.numIdError = '';
+    }
+};
+const validateTipoDocumentoId = (e: Event) => {
+    const target = e.target as HTMLSelectElement;
+    if (target.value.length === 0) {
+        return;
+    }
+    if (!validacion.validarNumero(target.value)) {
+        datas.tipoDocumentoIdError = 'El tipo de documento es obligatorio.';
+    } else {
+        form.tipo_documento_id = target.value;
+        datas.tipoDocumentoIdError = '';
+    }
+};
+const validateDireccion = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value.length === 0) {
+        return;
+    }
+    if (!validacion.validarDireccion(target.value)) {
+        datas.direccionError = 'La dirección debe tener más de 2 caracteres y no contener caracteres especiales.';
+    } else {
+        form.direccion = target.value;
+        datas.direccionError = '';
+    }
+};
+const validateTelefono = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value.length === 0) {
+        return;
+    }
+    if (!validacion.validarTelefono(target.value)) {
+        datas.telefonoError = 'El teléfono debe tener entre 5 y 20 caracteres y no contener caracteres especiales.';
+    } else {
+        form.telefono = target.value;
+        datas.telefonoError = '';
+    }
+};
+const validateEmail = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (target.value.length === 0) {
+        return;
+    }
+    if (!validacion.validarEmail(target.value)) {
+        datas.emailError = 'El correo electrónico no es válido.';
+    } else {
+        form.email = target.value;
+        datas.emailError = '';
+    }
+};
+const validateEmpleadoCargoId = (e: Event) => {
+    const target = e.target as HTMLSelectElement;
+    if (target.value.length === 0) {
+        return;
+    }
+    if (!validacion.validarNumero(target.value)) {
+        datas.empleadoCargoIdError = 'El cargo del empleado es obligatorio.';
+    } else {
+        form.empleado_cargo_id = target.value;
+        datas.empleadoCargoIdError = '';
     }
 };
 
@@ -123,10 +230,6 @@ const editar_model = async () => {
 };
 
 const submit_create = async () => {
-    if (form.sigla.length < 2) {
-        datas.siglaError = 'La sigla debe tener más de 2 caracteres y no contener caracteres especiales.';
-        return;
-    }
     if (props.isCreate) {
         await create_model();
     } else {
@@ -141,8 +244,28 @@ const handleErrors = (error: any) => {
     }
     if (error.response.data && error.response.data.statusCode === 422) {
         const errors = error.response.data.messageError;
-        datas.siglaError = errors.sigla ? errors.sigla[0] : '';
-        datas.detalleError = errors.detalle ? errors.detalle[0] : '';
+        for (const key in errors) {
+            if (errors.hasOwnProperty(key)) {
+                const errorMessage = errors[key];
+                if (key === inputs_ids.name) {
+                    datas.nameError = errorMessage;
+                } else if (key === inputs_ids.numId) {
+                    datas.numIdError = errorMessage;
+                } else if (key === inputs_ids.tipo_documento_id) {
+                    datas.tipoDocumentoIdError = errorMessage;
+                } else if (key === inputs_ids.direccion) {
+                    datas.direccionError = errorMessage;
+                } else if (key === inputs_ids.telefono) {
+                    datas.telefonoError = errorMessage;
+                } else if (key === inputs_ids.email) {
+                    datas.emailError = errorMessage;
+                } else if (key === inputs_ids.empleado_cargo_id) {
+                    datas.empleadoCargoIdError = errorMessage;
+                } else if (key === inputs_ids.userId) {
+                    datas.userIdError = errorMessage;
+                }
+            }
+        }
     } else {
         AlertService.error(error.response.data.message);
         datas.generalError = 'Ocurrió un error inesperado. Por favor, inténtelo de nuevo.';
@@ -164,44 +287,149 @@ const handleErrors = (error: any) => {
             <br />
             <hr class="mb-4" />
             <div>
+                <!--                Nombre-->
                 <div class="mb-4">
                     <label
-                        :for="'sigla-' + model_path"
-                        :class="{ 'label-error': datas.siglaError }"
+                        :for="inputs_ids.name+'-'+ model_path"
+                        :class="{ 'label-error': datas.nameError }"
                         class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                        >Sigla</label
-                    >
+                    >Nombre</label>
                     <input
                         type="text"
-                        name="sigla"
-                        :id="'sigla-' + model_path"
-                        v-model="form.sigla"
-                        @input="validateSigla"
-                        :class="{ 'input-error': datas.siglaError }"
+                        name="Nombre"
+                        :id="inputs_ids.name+'-'+ model_path"
+                        v-model="form.name"
+                        @input="validateName"
+                        :class="{ 'input-error': datas.nameError }"
                         class="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                        placeholder="Sigla"
+                        placeholder="Nombre"
                         required
                     />
-                    <InputError class="mt-2" :message="datas.siglaError.toUpperCase()" />
+                    <InputError class="mt-2" :message="datas.nameError.toUpperCase()" />
                 </div>
+                <!--                Número de identificación-->
                 <div class="mb-4">
                     <label
-                        :for="'detalle-' + model_path"
-                        :class="{ 'label-error': datas.detalleError }"
+                        :for="inputs_ids.numId+'-'+ model_path"
+                        :class="{ 'label-error': datas.numIdError }"
                         class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
-                        >Detalle</label
-                    >
-                    <textarea
-                        :id="'detalle-' + model_path"
-                        rows="4"
-                        v-model="form.detalle"
-                        @input="validateDetalle"
-                        :class="{ 'input-error': datas.detalleError }"
-                        class="focus:ring-primary-500 focus:border-primary-500 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
-                        placeholder="Ingrese la descripción aquí"
-                    ></textarea>
-                    <InputError class="mt-2" :message="datas.detalleError.toUpperCase()" />
+                    >Número de identificación</label>
+                    <input
+                        type="text"
+                        name="numId"
+                        :id="inputs_ids.numId+'-'+ model_path"
+                        v-model="form.num_id"
+                        @input="validateNumId"
+                        :class="{ 'input-error': datas.numIdError }"
+                        class="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                        placeholder="Número de identificación"
+                        required
+                    />
+                    <InputError class="mt-2" :message="datas.numIdError.toUpperCase()" />
                 </div>
+                <!--                Tipo de documento-->
+                <div class="mb-4">
+                    <label
+                        :for="inputs_ids.tipo_documento_id+'-'+ model_path"
+                        :class="{ 'label-error': datas.tipoDocumentoIdError }"
+                        class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                    >Tipo de documento</label>
+                    <select
+                        :id="inputs_ids.tipo_documento_id+'-'+ model_path"
+                        v-model="form.tipo_documento_id"
+                        @change="validateTipoDocumentoId"
+                        :class="{ 'input-error': datas.tipoDocumentoIdError }"
+                        class="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    >
+                        <option value="">Seleccione un tipo de documento</option>
+                        <option v-for="tipoDocumento in tipoDocumentos" :key="tipoDocumento.id" :value="tipoDocumento.id">
+                            {{ tipoDocumento.detalle }}
+                        </option>
+                    </select>
+                    <InputError class="mt-2" :message="datas.tipoDocumentoIdError.toUpperCase()" />
+                </div>
+                <!--                Dirección-->
+                <div class="mb-4">
+                    <label
+                        :for="inputs_ids.direccion+'-'+ model_path"
+                        :class="{ 'label-error': datas.direccionError }"
+                        class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                    >Dirección</label>
+                    <input
+                        type="text"
+                        name="Dirección"
+                        :id="inputs_ids.direccion+'-'+ model_path"
+                        v-model="form.direccion"
+                        @input="validateDireccion"
+                        :class="{ 'input-error': datas.direccionError }"
+                        class="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                        placeholder="Dirección"
+                        required
+                    />
+                    <InputError class="mt-2" :message="datas.direccionError.toUpperCase()" />
+                </div>
+                <!--                Teléfono-->
+                <div class="mb-4">
+                    <label
+                        :for="inputs_ids.telefono+'-'+ model_path"
+                        :class="{ 'label-error': datas.telefonoError }"
+                        class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                    >Teléfono</label>
+                    <input
+                        type="text"
+                        name="Teléfono"
+                        :id="inputs_ids.telefono+'-'+ model_path"
+                        v-model="form.telefono"
+                        @input="validateTelefono"
+                        :class="{ 'input-error': datas.telefonoError }"
+                        class="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                        placeholder="Teléfono"
+                        required
+                    />
+                    <InputError class="mt-2" :message="datas.telefonoError.toUpperCase()" />
+                </div>
+                <!--                Email-->
+                <div class="mb-4">
+                    <label
+                        :for="inputs_ids.email+'-'+ model_path"
+                        :class="{ 'label-error': datas.emailError }"
+                        class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                    >Email</label>
+                    <input
+                        type="email"
+                        name="Email"
+                        :id="inputs_ids.email+'-'+ model_path"
+                        v-model="form.email"
+                        @input="validateEmail"
+                        :class="{ 'input-error': datas.emailError }"
+                        class="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                        placeholder="Email"
+                        required
+                    />
+                    <InputError class="mt-2" :message="datas.emailError.toUpperCase()" />
+                </div>
+                <!--                Cargo del empleado-->
+                <div class="mb-4">
+                    <label
+                        :for="inputs_ids.empleado_cargo_id+'-'+ model_path"
+                        :class="{ 'label-error': datas.empleadoCargoIdError }"
+                        class="mb-2 block text-sm font-medium text-gray-900 dark:text-white"
+                    >Cargo del empleado</label>
+                    <select
+                        :id="inputs_ids.empleado_cargo_id+'-'+ model_path"
+                        v-model="form.empleado_cargo_id"
+                        @change="validateEmpleadoCargoId"
+                        :class="{ 'input-error': datas.empleadoCargoIdError }"
+                        class="focus:ring-primary-600 focus:border-primary-600 dark:focus:ring-primary-500 dark:focus:border-primary-500 block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+                    >
+                        <option value="">Seleccione un cargo de empleado</option>
+                        <option v-for="empleadoCargo in empleadoCargos" :key="empleadoCargo.id" :value="empleadoCargo.id">
+                            {{ empleadoCargo.detalle }}
+                        </option>
+                    </select>
+                    <InputError class="mt-2" :message="datas.empleadoCargoIdError.toUpperCase()" />
+                </div>
+
                 <button
                     type="submit"
                     @click="submit_create"

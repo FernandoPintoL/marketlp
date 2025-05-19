@@ -18,12 +18,12 @@ return new class extends Migration
             $table->string('telefono')->nullable();
             $table->string('email')->nullable();
             $table->string('direccion')->nullable();
-            $table->string('tipo_empresa')->nullable();
-            $table->string('tipo_documento')->nullable();
             $table->string('photo_path')->nullable();
+            $table->unsignedBigInteger('tipo_documento_id')->nullable();
             $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreign('tipo_documento_id')->references('id')->on('tipo_documentos')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

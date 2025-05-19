@@ -6,6 +6,8 @@ use App\Models\Categoria;
 use App\Models\Cliente;
 use App\Http\Requests\StoreClienteRequest;
 use App\Http\Requests\UpdateClienteRequest;
+use App\Models\EmpleadoCargo;
+use App\Models\TipoDocumento;
 use App\Services\PermissionService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -94,8 +96,10 @@ class ClienteController extends Controller
         if (!Auth::user()->can($permiso.'-create')) {
             abort(403);
         }
+        $tipoDocumentos = TipoDocumento::all();
         return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
-            'isCreate' => true
+            'isCreate' => true,
+            'tipoDocumentos' => $tipoDocumentos,
         ], PermissionService::getPermissions($permiso)));
     }
 
@@ -132,6 +136,8 @@ class ClienteController extends Controller
         return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
             'isCreate' => false,
             'model' => $cliente,
+            'tipoDocumentos' => TipoDocumento::all(),
+            'empleadoCargos' => EmpleadoCargo::all(),
         ], PermissionService::getPermissions($permiso)));
     }
 

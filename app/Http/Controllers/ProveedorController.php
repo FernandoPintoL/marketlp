@@ -6,6 +6,7 @@ use App\Models\Categoria;
 use App\Models\Proveedor;
 use App\Http\Requests\StoreProveedorRequest;
 use App\Http\Requests\UpdateProveedorRequest;
+use App\Models\TipoDocumento;
 use App\Services\PermissionService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -96,7 +97,8 @@ class ProveedorController extends Controller
             abort(403);
         }
         return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
-            'isCreate' => true
+            'isCreate' => true,
+            'tipoDocumentos' => TipoDocumento::all(),
         ], PermissionService::getPermissions($permiso)));
     }
 
@@ -133,6 +135,7 @@ class ProveedorController extends Controller
         return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
             'isCreate' => false,
             'model' => $proveedor,
+            'tipoDocumentos' => TipoDocumento::all(),
         ], PermissionService::getPermissions($permiso)));
     }
 

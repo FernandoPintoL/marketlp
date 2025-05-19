@@ -6,6 +6,7 @@ use App\Models\Empleado;
 use App\Http\Requests\StoreEmpleadoRequest;
 use App\Http\Requests\UpdateEmpleadoRequest;
 use App\Models\EmpleadoCargo;
+use App\Models\TipoDocumento;
 use App\Services\PermissionService;
 use App\Services\ResponseService;
 use Illuminate\Http\Request;
@@ -95,7 +96,9 @@ class EmpleadoController extends Controller
             abort(403);
         }
         return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
-            'isCreate' => true
+            'isCreate' => true,
+            'tipoDocumentos' => TipoDocumento::all(),
+            'empleadoCargos' => EmpleadoCargo::all(),
         ], PermissionService::getPermissions($permiso)));
     }
 
@@ -132,6 +135,8 @@ class EmpleadoController extends Controller
         return Inertia::render($this->rutaVisita . '/CreateUpdate', array_merge([
             'isCreate' => false,
             'model' => $empleado,
+            'tipoDocumentos' => TipoDocumento::all(),
+            'empleadoCargos' => EmpleadoCargo::all(),
         ], PermissionService::getPermissions($permiso)));
     }
 
