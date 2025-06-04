@@ -23,16 +23,28 @@ class DatabaseSeeder extends Seeder
             "updated_at" => date_create('now')->format('Y-m-d H:i:s')
         ]);
 
+
         $this->call([
+            TipoDocumentoSeeder::class,
+            EmpresaSeeder::class,
+            EmpleadoCargoSeeder::class,
+            EmpleadoSeeder::class,
             PermissionsSeeder::class,
             RolesSeeder::class,
+            SucursalSeeder::class,
             AlmacenSeeder::class,
+            SectorSeeder::class,
             CategoriaSeeder::class,
             UnidadSeeder::class,
             MenuSeeder::class,
-            TipoDocumentoSeeder::class,
-            EmpleadoCargoSeeder::class,
-            SectorSeeder::class,
+            MonedaSeeder::class,
+            TipoCambioSeeder::class,
+            TipoCodigoSeeder::class,
+            TipoMovimientoSeeder::class,
+            TipoPagosSeeder::class,
+            TipoPrecioSeeder::class,
+            TipoProformaSeeder::class,
+            TipoUbicacionItemSeeder::class,
         ]);
     }
 }

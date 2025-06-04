@@ -11,13 +11,19 @@ class Sector extends Model
     use HasFactory;
     protected $table = "sectors";
     protected $primaryKey = "id";
+    public $timestamps = true;
     protected $fillable = [
-        'id',
-        'sigla',
-        'detalle',
+        'almacen_id',
+        'codigo',
+        'nombre',
+        'descripcion',
         'maximo',
         'minimo',
         'created_at',
         'updated_at'
     ];
+    public function almacen()
+    {
+        return $this->belongsTo(Almacen::class, 'almacen_id');
+    }
 }

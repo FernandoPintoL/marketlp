@@ -20,4 +20,8 @@ class Menu extends Model
         'created_at',
         'updated_at'
     ];
+    public function submenus()
+    {
+        return $this->hasMany(Menu::class, 'parent_id', 'id');
+    }
 }

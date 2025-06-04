@@ -11,11 +11,19 @@ class Unidad extends Model
     use HasFactory;
     protected $table = "unidads";
     protected $primaryKey = "id";
+    public $timestamps = true;
     protected $fillable = [
-        'id',
         'sigla',
         'detalle',
         'created_at',
         'updated_at'
     ];
+    public function items()
+    {
+        return $this->hasMany(Item::class, 'unidad_id');
+    }
+    public function precios()
+    {
+        return $this->hasMany(PrecioItems::class, 'unidad_id');
+    }
 }

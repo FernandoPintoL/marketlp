@@ -12,6 +12,17 @@ class TipoCodigoSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        // tipos de codigos para item
+        $tipos_codigos = [
+            [
+                'sigla' => 'QR',
+                'detalle' => 'Código QR para productos'],
+            [
+                'sigla' => 'BARRA',
+                'detalle' => 'Código de barras para productos'],
+        ];
+        foreach ($tipos_codigos as $tipo_codigo) {
+            \App\Models\TipoCodigo::create($tipo_codigo);
+        }
     }
 }

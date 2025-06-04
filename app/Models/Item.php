@@ -11,14 +11,23 @@ class Item extends Model
     use HasFactory;
     protected $table = "items";
     protected $primaryKey = "id";
+    public $timestamps = true;
     protected $fillable = [
-        'id',
         'cod_barra',
         'name',
         'descripcion',
+        'photo_path',
         'categoria_id',
         'unidad_id',
         'created_at',
         'updated_at'
     ];
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'categoria_id');
+    }
+    public function unidad()
+    {
+        return $this->belongsTo(Unidad::class, 'unidad_id');
+    }
 }

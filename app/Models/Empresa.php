@@ -11,18 +11,26 @@ class Empresa extends Model
     use HasFactory;
     protected $table = "empresas";
     protected $primaryKey = "id";
+    public $timestamps = true;
     protected $fillable = [
-        'id',
         'name',
         'num_id',
         'telefono',
         'email',
         'direccion',
-        'tipo_empresa',
-        'tipo_documento',
         'photo_path',
+        'tipo_documento_id',
         'user_id',
         'created_at',
         'updated_at'
     ];
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class, 'tipo_documento_id');
+    }
+
 }

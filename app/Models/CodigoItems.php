@@ -13,10 +13,18 @@ class CodigoItems extends Model
     protected $primaryKey = "id";
     protected $fillable = [
         'id',
-        'codigo_id',
-        'items_id',
+        'item_id',
+        'tipo_codigo_id',
         'codigo',
         'created_at',
         'updated_at'
     ];
+    public function item()
+    {
+        return $this->belongsTo(Item::class, 'item_id');
+    }
+    public function tipoCodigo()
+    {
+        return $this->belongsTo(TipoCodigo::class, 'tipo_codigo_id');
+    }
 }

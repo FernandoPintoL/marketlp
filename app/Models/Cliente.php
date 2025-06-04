@@ -11,6 +11,7 @@ class Cliente extends Model
     use HasFactory;
     protected $table = "clientes";
     protected $primaryKey = "id";
+    public $timestamps = true;
     protected $fillable = [
         'name',
         'num_id',
@@ -25,5 +26,9 @@ class Cliente extends Model
     public function tipoDocumento()
     {
         return $this->belongsTo(TipoDocumento::class, 'tipo_documento_id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

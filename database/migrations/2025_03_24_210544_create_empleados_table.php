@@ -15,16 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('name')->default('Sin nombre');
             $table->string('num_id')->nullable();
-            $table->unsignedBigInteger('tipo_documento_id')->nullable();
             $table->string("direccion")->nullable();
             $table->string("telefono")->nullable();
             $table->string("email")->nullable();
-            $table->unsignedBigInteger('empleado_cargo_id')->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
             $table->timestamps();
-            $table->foreign('tipo_documento_id')->references('id')->on('tipo_documentos')->onDelete('set null')->onUpdate('set null');
-            $table->foreign('empleado_cargo_id')->references('id')->on('empleado_cargos')->onDelete('set null')->onUpdate('set null');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('set null');
+            $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('tipo_documento_id')->constrained('tipo_documentos')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('empleado_cargo_id')->constrained('empleado_cargos')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

@@ -15,19 +15,23 @@ class AlmacenSeeder extends Seeder
     {
         //almacenes para prodcuctos
         Almacen::create([
+            'empleado_id' => 1,
             'sigla' => 'ALM',
-            'detalle' => 'Almacen Principal',
+            'nombre' => 'Almacen Principal',
             'direccion' => 'Av. Principal 123',
             'created_at' => date_create('now')->format('Y-m-d H:i:s'),
-            'updated_at' => date_create('now')->format('Y-m-d H:i:s')
+            'updated_at' => date_create('now')->format('Y-m-d H:i:s'),
+            'sucursal_id' => 1
         ]);
 
         Almacen::create([
+            'empleado_id' => 1,
             'sigla' => 'SVT',
-            'detalle' => 'Sala de Ventas',
+            'nombre' => 'Sala de Ventas',
             'direccion' => 'Av. Principal 123',
             'created_at' => date_create('now')->format('Y-m-d H:i:s'),
-            'updated_at' => date_create('now')->format('Y-m-d H:i:s')
+            'updated_at' => date_create('now')->format('Y-m-d H:i:s'),
+            'sucursal_id' => 1
         ]);
     }
 }

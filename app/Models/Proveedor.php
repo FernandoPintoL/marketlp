@@ -11,8 +11,8 @@ class Proveedor extends Model
     use HasFactory;
     protected $table = "proveedors";
     protected $primaryKey = "id";
+    public $timestamps = true;
     protected $fillable = [
-        'id',
         'name',
         'num_id',
         'direccion',
@@ -21,6 +21,19 @@ class Proveedor extends Model
         'contacto',
         'tipo_documento_id',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'empresa_id',
     ];
+    public function tipoDocumento()
+    {
+        return $this->belongsTo(TipoDocumento::class, 'tipo_documento_id');
+    }
+    public function empresa()
+    {
+        return $this->belongsTo(Empresa::class, 'empresa_id');
+    }
+    public function compras()
+    {
+        return $this->hasMany(Compra::class, 'proveedor_id');
+    }
 }

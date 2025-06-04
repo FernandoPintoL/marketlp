@@ -22,6 +22,7 @@ return new class extends Migration
             $table->unsignedBigInteger('tipo_documento_id')->nullable();
             $table->timestamps();
             $table->foreign('tipo_documento_id')->references('id')->on('tipo_documentos')->onDelete('set null');
+            $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

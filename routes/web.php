@@ -42,18 +42,41 @@ $resources = [
     'users' => UserController::class,
 ];
 
+// Public routes
 Route::get('/', function () {
-    return Inertia::render('Welcome');
+    // Get featured products to display on the welcome page
+    $items = \App\Models\Item::with(['categoria', 'precioItems' => function($query) {
+        $query->where('tipo_precio_id', 1); // Assuming 1 is the default price type
+    }])->take(12)->get();
+
+    return Inertia::render('Welcome', [
+        'items' => $items
+    ]);
 })->name('home');
 
-Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Protected routes
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('dashboard', function () {
+        return Inertia::render('Dashboard');
+    })->name('dashboard');
+
+    // Resource routes
+    foreach ($resources as $key => $controller) {
+        Route::resource("/$key", $controller);
+        Route::post("/$key/query", [$controller, 'query'])->name("$key.query");
+    }
+
+    // Additional routes for Venta, Compra, and Proforma
+    Route::resource('/venta', \App\Http\Controllers\VentaController::class);
+    Route::post('/venta/query', [\App\Http\Controllers\VentaController::class, 'query'])->name('venta.query');
+
+    Route::resource('/compra', \App\Http\Controllers\CompraController::class);
+    Route::post('/compra/query', [\App\Http\Controllers\CompraController::class, 'query'])->name('compra.query');
+
+    Route::resource('/proforma', \App\Http\Controllers\ProformaController::class);
+    Route::post('/proforma/query', [\App\Http\Controllers\ProformaController::class, 'query'])->name('proforma.query');
+    Route::post('/proforma/{proforma}/convert-to-venta', [\App\Http\Controllers\ProformaController::class, 'convertToVenta'])->name('proforma.convert-to-venta');
+});
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';
-
-foreach ($resources as $key => $controller) {
-    Route::resource("/$key", $controller);
-    Route::post("/$key/query", [$controller, 'query'])->name("$key.query");
-}

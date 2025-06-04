@@ -12,6 +12,6 @@ class CodigoItemsSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        // codigo para items
     }
 }

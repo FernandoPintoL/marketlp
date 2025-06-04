@@ -11,12 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sectors', function (Blueprint $table) {
+        Schema::create('tipo_movimientos', function (Blueprint $table) {
             $table->id();
-            $table->string('sigla')->default('Sin nombre');
+            $table->string('sigla')->unique();
             $table->string('detalle')->nullable();
-            $table->double('maximo')->default(0)->nullable();
-            $table->double('minimo')->default(0)->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sectors');
+        Schema::dropIfExists('tipo_movimientos');
     }
 };

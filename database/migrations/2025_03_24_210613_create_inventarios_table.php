@@ -12,14 +12,17 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('inventarios', function (Blueprint $table) {
-            $table->unsignedBigInteger('item_id');
-            $table->unsignedBigInteger('almacen_id');
-            $table->unsignedBigInteger('sector_id');
-            $table->double('stock')->default(0);
+            $table->id();
+            $table->foreignId('item_id')->constrained("items")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('almacen_id')->constrained("almacens")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('ubicacion_item_id')->nullable()->constrained("ubicacion_items")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('lote')->default('Sin lote')->nullable();
+            $table->date('fecha_vencimiento')->default(now())->nullable();
+            $table->decimal('cantidad_disponible', 10, 2)->default(0);
+            $table->decimal('cantidad_reservada', 10, 2)->default(0);
+            $table->decimal('cantidad_apartada', 10, 2)->default(0);
+            $table->timestamp('fecha_ultima_actualizacion')->default(now());
             $table->timestamps();
-            $table->foreign('item_id')->references('id')->on('items')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('almacen_id')->references('id')->on('almacens')->onDelete('cascade')->onUpdate('cascade');
-            $table->foreign('sector_id')->references('id')->on('sectors')->onDelete('cascade')->onUpdate('cascade');
         });
     }
 

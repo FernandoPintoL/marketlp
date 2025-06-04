@@ -11,11 +11,15 @@ class TipoCodigo extends Model
     use HasFactory;
     protected $table = "tipo_codigos";
     protected $primaryKey = "id";
+    public $timestamps = true;
     protected $fillable = [
-        'id',
         'sigla',
         'detalle',
         'created_at',
         'updated_at'
     ];
+    public function codigos()
+    {
+        return $this->hasMany(CodigoItems::class, 'tipo_codigo_id');
+    }
 }

@@ -15,115 +15,115 @@ class EmpleadoCargoSeeder extends Seeder
         // crear seeders para tipos de empleados
         $empleadoCargos = [
             [
-                'cargo' => 'Gerente',
+                'sigla' => 'Gerente',
                 'detalle' => 'Gerente General',
             ],
             [
-                'cargo' => 'Asistente',
+                'sigla' => 'Asistente',
                 'detalle' => 'Asistente Administrativo',
             ],
             [
-                'cargo' => 'Contador',
+                'sigla' => 'Contador',
                 'detalle' => 'Contador General',
             ],
             [
-                'cargo' => 'Vendedor',
+                'sigla' => 'Vendedor',
                 'detalle' => 'Vendedor de Tienda',
             ],
             [
-                'cargo' => 'Otro',
+                'sigla' => 'Otro',
                 'detalle' => 'Otro',
             ],
             [
-                'cargo' => 'Almacenista',
+                'sigla' => 'Almacenista',
                 'detalle' => 'Almacenista',
             ],
             [
-                'cargo' => 'Chofer',
+                'sigla' => 'Chofer',
                 'detalle' => 'Chofer',
             ],
             [
-                'cargo' => 'Tecnico',
+                'sigla' => 'Tecnico',
                 'detalle' => 'Tecnico de Servicio',
             ],
             [
-                'cargo' => 'Jefe de Almacen',
+                'sigla' => 'Jefe de Almacen',
                 'detalle' => 'Jefe de Almacen',
             ],
             [
-                'cargo' => 'Jefe de Ventas',
+                'sigla' => 'Jefe de Ventas',
                 'detalle' => 'Jefe de Ventas',
             ],
             [
-                'cargo' => 'Jefe de Compras',
+                'sigla' => 'Jefe de Compras',
                 'detalle' => 'Jefe de Compras',
             ],
             [
-                'cargo' => 'Jefe de Recursos Humanos',
+                'sigla' => 'Jefe de Recursos Humanos',
                 'detalle' => 'Jefe de Recursos Humanos',
             ],
             [
-                'cargo' => 'Jefe de Sistemas',
+                'sigla' => 'Jefe de Sistemas',
                 'detalle' => 'Jefe de Sistemas',
             ],
             [
-                'cargo' => 'Jefe de Marketing',
+                'sigla' => 'Jefe de Marketing',
                 'detalle' => 'Jefe de Marketing',
             ],
             [
-                'cargo' => 'Jefe de Produccion',
+                'sigla' => 'Jefe de Produccion',
                 'detalle' => 'Jefe de Produccion',
             ],
             [
-                'cargo' => 'Jefe de Calidad',
+                'sigla' => 'Jefe de Calidad',
                 'detalle' => 'Jefe de Calidad',
             ],
             [
-                'cargo' => 'Jefe de Logistica',
+                'sigla' => 'Jefe de Logistica',
                 'detalle' => 'Jefe de Logistica',
             ],
             [
-                'cargo' => 'Jefe de Seguridad',
+                'sigla' => 'Jefe de Seguridad',
                 'detalle' => 'Jefe de Seguridad',
             ],
             [
-                'cargo' => 'Jefe de Mantenimiento',
+                'sigla' => 'Jefe de Mantenimiento',
                 'detalle' => 'Jefe de Mantenimiento',
             ],
             [
-                'cargo' => 'Jefe de Proyectos',
+                'sigla' => 'Jefe de Proyectos',
                 'detalle' => 'Jefe de Proyectos',
             ],
             [
-                'cargo' => 'Jefe de Compras Internacionales',
+                'sigla' => 'Jefe de Compras Internacionales',
                 'detalle' => 'Jefe de Compras Internacionales',
             ],
             [
-                'cargo' => 'Jefe de Ventas Internacionales',
+                'sigla' => 'Jefe de Ventas Internacionales',
                 'detalle' => 'Jefe de Ventas Internacionales',
             ],
             [
-                'cargo' => 'Jefe de Finanzas',
+                'sigla' => 'Jefe de Finanzas',
                 'detalle' => 'Jefe de Finanzas',
             ],
             [
-                'cargo' => 'Jefe de Administracion',
+                'sigla' => 'Jefe de Administracion',
                 'detalle' => 'Jefe de Administracion',
             ],
             [
-                'cargo' => 'Jefe de Tecnologia',
+                'sigla' => 'Jefe de Tecnologia',
                 'detalle' => 'Jefe de Tecnologia',
             ],
             [
-                'cargo' => 'Jefe de Innovacion',
+                'sigla' => 'Jefe de Innovacion',
                 'detalle' => 'Jefe de Innovacion',
             ],
             [
-                'cargo' => 'Jefe de Desarrollo',
+                'sigla' => 'Jefe de Desarrollo',
                 'detalle' => 'Jefe de Desarrollo',
             ],
             [
-                'cargo' => 'Jefe de Investigacion',
+                'sigla' => 'Jefe de Investigacion',
                 'detalle' => 'Jefe de Investigacion',
             ],
         ];

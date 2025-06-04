@@ -11,12 +11,24 @@ class Almacen extends Model
     use HasFactory;
     protected $table = "almacens";
     protected $primaryKey = "id";
+    public $timestamps = true;
     protected $fillable = [
-        'id',
         'sigla',
-        'detalle',
+        'nombre',
         'direccion',
+        'telefono',
         'created_at',
-        'updated_at'
+        'updated_at',
+        'empleado_id',
+        'sucursal_id',
     ];
+    public function empleado()
+    {
+        return $this->belongsTo(Empleado::class, 'empleado_id');
+    }
+    public function sucursal()
+    {
+        return $this->belongsTo(Sucursal::class, 'sucursal_id');
+    }
+
 }
