@@ -22,25 +22,7 @@ use App\Http\Controllers\{
     UserController
 };
 
-$resources = [
-    'ajustes' => AjustesController::class,
-    'almacen' => AlmacenController::class,
-    'categoria' => CategoriaController::class,
-    'cliente' => ClienteController::class,
-    'empleado' => EmpleadoController::class,
-    'empleado-cargo' => EmpleadoCargoController::class,
-    'empresa' => EmpresaController::class,
-    'inventario' => InventarioController::class,
-    'item' => ItemController::class,
-    'menu' => MenuController::class,
-    'permissions' => PermissionsController::class,
-    'proveedor' => ProveedorController::class,
-    'roles' => RolesController::class,
-    'sector' => SectorController::class,
-    'tipo-documento' => TipoDocumentoController::class,
-    'unidad' => UnidadController::class,
-    'users' => UserController::class,
-];
+
 
 // Public routes
 Route::get('/', function () {
@@ -56,6 +38,25 @@ Route::get('/', function () {
 
 // Protected routes
 Route::middleware(['auth', 'verified'])->group(function () {
+    $resources = [
+        'ajustes' => AjustesController::class,
+        'almacen' => AlmacenController::class,
+        'categoria' => CategoriaController::class,
+        'cliente' => ClienteController::class,
+        'empleado' => EmpleadoController::class,
+        'empleado-cargo' => EmpleadoCargoController::class,
+        'empresa' => EmpresaController::class,
+        'inventario' => InventarioController::class,
+        'item' => ItemController::class,
+        'menu' => MenuController::class,
+        'permissions' => PermissionsController::class,
+        'proveedor' => ProveedorController::class,
+        'roles' => RolesController::class,
+        'sector' => SectorController::class,
+        'tipo-documento' => TipoDocumentoController::class,
+        'unidad' => UnidadController::class,
+        'users' => UserController::class,
+    ];
     Route::get('dashboard', function () {
         return Inertia::render('Dashboard');
     })->name('dashboard');
