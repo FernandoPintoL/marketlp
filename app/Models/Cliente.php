@@ -13,15 +13,11 @@ class Cliente extends Model
     protected $primaryKey = "id";
     public $timestamps = true;
     protected $fillable = [
-        'name',
         'num_id',
-        'tipo_documento_id',
         'direccion',
         'telefono',
-        'email',
+        'tipo_documento_id',
         'user_id',
-        'created_at',
-        'updated_at'
     ];
     public function tipoDocumento()
     {

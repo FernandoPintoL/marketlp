@@ -3,51 +3,36 @@ import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
 import NavUser from '@/components/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import MenuService from '@/Services/MenuService';
+import { ParamsConsulta } from '@/Data/PaginacionLaravel';
+import { MenuNegocio } from '@/Negocio/MenuNegocio';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/vue3';
 import { onMounted, reactive } from 'vue';
 import AppLogo from './AppLogo.vue';
 
-/*let mainNavItems: NavItem[] = [
-    {
-        title: 'Dashboard',
-        href: '/dashboard',
-        icon: LayoutGrid,
-    },
-];*/
+const negocio: MenuNegocio = new MenuNegocio();
+
+const footerNavItems: NavItem[] = [];
 
 const datas = reactive({
     menus: [],
 });
 
 onMounted(() => {
-    //console.log('mounted');
-    MenuService.query('')
+    const params: ParamsConsulta = {
+        query: '',
+    };
+    negocio
+        .consultar(params)
         .then((response) => {
-
-            // como agregar a mainNavItems
-            datas.menus = response.data.data;
+            console.log("api response: ");
+            console.log(response);
+            datas.menus = response.data;
         })
         .catch((error) => {
             console.error(error);
         });
 });
-
-
-
-const footerNavItems: NavItem[] = [
-    /*{
-        title: 'Github Repo',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits',
-        icon: BookOpen,
-    },*/
-];
 </script>
 
 <template>
@@ -59,7 +44,6 @@ const footerNavItems: NavItem[] = [
                         <Link :href="route('dashboard')">
                             <AppLogo />
                         </Link>
-
                     </SidebarMenuButton>
                 </SidebarMenuItem>
             </SidebarMenu>

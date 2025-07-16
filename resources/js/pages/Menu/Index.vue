@@ -14,9 +14,10 @@ import { type BreadcrumbItem } from '@/types';
 import TableLayout from '@/Componentes/TableLayout.vue';
 import ButtonsAdd from '@/Componentes/ButtonsAdd.vue';
 import Pagination from '@/Componentes/Pagination.vue';
-import MenuService from '@/Services/MenuService';
+import type { Menu } from '@/Data/Menu';
+import MenuNegocio from '@/Negocio/MenuNegocio';
 
-const model_service = MenuService;
+const model_service = MenuNegocio;
 const model_path = model_service.path_url;
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -28,7 +29,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps({
     listado: {
-        type: Array as () => Array<{ id: number, sigla: string, detalle: string, created_at: string, updated_at: string }>,
+        type: Array as () => Array<Menu>,
         default: () => [],
     },
     crear: {
@@ -46,7 +47,7 @@ const props = defineProps({
 });
 
 const datas = reactive({
-    list: [] as Array<{ id: number, sigla: string, detalle: string, created_at: string, updated_at: string }>,
+    list: [] as Array<Menu>,
     isLoad: false,
     dateStart: '',
     dateEnd: '',
@@ -70,7 +71,7 @@ const query = ref('');
 
 const fetchList = async (page = 1) => {
     datas.isLoad = true;
-    const response = await model_service.query(query.value, page, datas.perPage);
+    const response = await model_service.query(query.value, true, page, datas.perPage);
     if (response.data.isSuccess) {
         datas.list = response.data.data.data;
         datas.messageList = response.data.message;
@@ -160,10 +161,7 @@ const refreshTable = () => {
                             ID
                         </th>
                         <th scope="col" class="p-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                            Sigla
-                        </th>
-                        <th scope="col" class="p-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                            Detalle
+                            Title / Direccion
                         </th>
                         <th scope="col" class="p-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                             Acciones
@@ -177,10 +175,7 @@ const refreshTable = () => {
                             {{ item.id }}
                         </td>
                         <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                            {{ item.sigla }}
-                        </td>
-                        <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
-                            {{ item.detalle }}
+                            {{ item.title }} / Direccion: {{ item.href }}
                         </td>
                         <TdTable
                             :creado="UtilsServices.fecha(item.created_at)"
@@ -204,5 +199,3 @@ const refreshTable = () => {
         </div>
     </AppLayout>
 </template>
-
-<style scoped></style>

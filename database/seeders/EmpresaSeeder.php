@@ -21,7 +21,6 @@ class EmpresaSeeder extends Seeder
             'email' => 'empresa@gmail.com',
             'photo_path' => '',
             'tipo_documento_id' => 1,
-            'user_id' => 1,
         ]);
     }
 }

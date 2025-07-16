@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HeaderForm from '@/Componentes/Header-Form.vue';
 import AlertService from '@/Services/AlertService.js';
-import CategoriaService from '@/Services/CategoriaService.js';
+import { CategoriaNegocio } from '@/Negocio/CategoriaNegocio';
 import UtilsServices from '@/Services/UtilsServices';
 import ValidacionService from '@/Services/ValidacionService.js';
 import InputError from '@/components/InputError.vue';
@@ -11,9 +11,10 @@ import { Head, useForm } from '@inertiajs/vue3';
 import { onMounted, reactive } from 'vue';
 import { route } from 'ziggy-js';
 import { Pencil, DiamondPlus } from 'lucide-vue-next';
+import { Categoria } from '@/Data/Categoria';
 
-const model_service = CategoriaService;
-const model_path = model_service.path_url;
+const model_service = new CategoriaNegocio();
+const model_path = model_service.model;
 const validacion = ValidacionService;
 
 const breadcrumbs: BreadcrumbItem[] = [
@@ -90,9 +91,23 @@ const validateDetalle = (e: Event) => {
     }
 };
 
+let categoria: Categoria = {
+    sigla: '',
+    detalle: ''
+};
+
+function cargarFormulario(){
+    categoria = {
+        id: form.id,
+        sigla: form.sigla,
+        detalle: form.detalle,
+    };
+}
+
 const create_model = async () => {
     try {
-        const response = await model_service.store(form);
+        cargarFormulario();
+        const response = await model_service.guardar(categoria);
         console.log(response.data);
         if (response.data.isSuccess) {
             await AlertService.success('La operación se completó con éxito.').then(() => {
@@ -109,7 +124,8 @@ const create_model = async () => {
 
 const editar_model = async () => {
     try {
-        const response = await model_service.update(form, form.id);
+        cargarFormulario();
+        const response = await model_service.actualizar(categoria, form.id);
         if (response.data.isSuccess) {
             await AlertService.success('La operación se completó con éxito.').then(() => {
                 window.location.href = route(model_path + '.index');
@@ -206,7 +222,7 @@ const handleErrors = (error: any) => {
                     type="submit"
                     @click="submit_create"
                     :class="[
-                        'mb-2 me-2 flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-center text-sm font-medium text-white focus:outline-none focus:ring-4',
+                        'me-2 mb-2 flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-center text-sm font-medium text-white focus:ring-4 focus:outline-none',
                         isCreate
                             ? 'bg-blue-700 hover:bg-blue-800 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800'
                             : 'bg-green-700 hover:bg-green-800 focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800',

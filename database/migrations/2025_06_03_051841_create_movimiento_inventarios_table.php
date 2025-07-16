@@ -16,8 +16,8 @@ return new class extends Migration
             $table->foreignId('item_id')->nullable()->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('almacen_origen_id')->nullable()->constrained('almacens')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('almacen_destino_id')->nullable()->constrained('almacens')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('ubicacion_origen_item_id')->nullable()->constrained('ubicacion_items')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('ubicacion_destino_item_id')->nullable()->constrained('ubicacion_items')->cascadeOnDelete()->cascadeOnUpdate();
+            /*$table->foreignId('ubicacion_origen_item_id')->nullable()->constrained('ubicacion_items')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('ubicacion_destino_item_id')->nullable()->constrained('ubicacion_items')->cascadeOnDelete()->cascadeOnUpdate();*/
             $table->foreignId('tipo_movimiento_id')->nullable()->constrained('tipo_movimientos')->cascadeOnDelete()->cascadeOnUpdate();
             $table->decimal('cantidad', 10, 3)->default(0);
             $table->timestamp('fecha_movimiento')->default(now());

@@ -18,7 +18,7 @@ class SectorSeeder extends Seeder
             [
                 'almacen_id' => 1,
                 'codigo' => 'A1',
-                'nombre' => 'Sector de Bebidas',
+                'name' => 'Sector de Bebidas',
                 'descripcion' => 'Sector destinado al almacenamiento de bebidas, incluyendo refrescos, jugos y aguas.',
                 'maximo' => 100,
                 'minimo' => 10,
@@ -28,7 +28,7 @@ class SectorSeeder extends Seeder
             [
                 'almacen_id' => 1,
                 'codigo' => 'A2',
-                'nombre' => 'Sector de Alimentos Secos',
+                'name' => 'Sector de Alimentos Secos',
                 'descripcion' => 'Sector destinado al almacenamiento de alimentos secos, como arroz, pasta y legumbres.',
                 'maximo' => 200,
                 'minimo' => 20,
@@ -38,7 +38,7 @@ class SectorSeeder extends Seeder
             [
                 'almacen_id' => 1,
                 'codigo' => 'A3',
-                'nombre' => 'Sector de Productos Frescos',
+                'name' => 'Sector de Productos Frescos',
                 'descripcion' => 'Sector destinado al almacenamiento de productos frescos, como frutas y verduras.',
                 'maximo' => 150,
                 'minimo' => 15,
@@ -48,7 +48,7 @@ class SectorSeeder extends Seeder
             [
                 'almacen_id' => 1,
                 'codigo' => 'A4',
-                'nombre' => 'Sector de Productos Congelados',
+                'name' => 'Sector de Productos Congelados',
                 'descripcion' => 'Sector destinado al almacenamiento de productos congelados, como helados y carnes.',
                 'maximo' => 80,
                 'minimo' => 8,
@@ -58,7 +58,7 @@ class SectorSeeder extends Seeder
             [
                 'almacen_id' => 1,
                 'codigo' => 'A5',
-                'nombre' => 'Sector de Productos de Limpieza',
+                'name' => 'Sector de Productos de Limpieza',
                 'descripcion' => 'Sector destinado al almacenamiento de productos de limpieza y desinfección.',
                 'maximo' => 120,
                 'minimo' => 12,
@@ -68,7 +68,7 @@ class SectorSeeder extends Seeder
             [
                 'almacen_id' => 1,
                 'codigo' => 'A6',
-                'nombre' => 'Sector de Productos de Higiene Personal',
+                'name' => 'Sector de Productos de Higiene Personal',
                 'descripcion' => 'Sector destinado al almacenamiento de productos de higiene personal, como jabones y champús.',
                 'maximo' => 90,
                 'minimo' => 9,
@@ -76,7 +76,8 @@ class SectorSeeder extends Seeder
                 'updated_at' => date_create('now')->format('Y-m-d H:i:s')
             ],
         ];
-
-        \DB::table('sectors')->insert($sectores);
+        foreach ($sectores as $sector) {
+            Sector::create($sector);
+        }
     }
 }

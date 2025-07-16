@@ -14,8 +14,7 @@ class SucursalSeeder extends Seeder
     {
         // sucursal 1
         \App\Models\Sucursal::create([
-            'codigo' => 'SUC1',
-            'nombre' => 'Sucursal Principal',
+            'name' => 'Sucursal Principal',
             'direccion' => 'Av. Principal 123',
             'telefono' => '123456789',
             'empresa_id' => 1, // Asignar el ID de la empresa correspondiente
@@ -23,7 +22,7 @@ class SucursalSeeder extends Seeder
             'es_matriz' => true,
             'estado' => 'activo',
             'created_at' => date_create('now')->format('Y-m-d H:i:s'),
-            'updated_at' => date_create('now')->format('Y-m-d H:i:s'),
+            'updated_at' => date_create('now')->format('Y-m-d H:i:s')
         ]);
     }
 }

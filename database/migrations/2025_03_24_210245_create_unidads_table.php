@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('unidads', function (Blueprint $table) {
             $table->id();
-            $table->string('sigla')->default('Sin nombre');
-            $table->string('detalle')->default('')->nullable();
+            $table->string('sigla')->unique();
+            $table->string('detalle')->nullable();
             $table->timestamps();
         });
     }

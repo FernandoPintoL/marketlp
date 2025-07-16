@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('precio_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id')->nullable();
-            $table->unsignedBigInteger('tipo_precio_id')->nullable();
+            $table->foreignId('item_id')->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('tipo_precio_id')->constrained('tipo_precios')->cascadeOnDelete()->cascadeOnUpdate();
             $table->double('precio')->default(0);
             $table->timestamps();
-            $table->foreign('item_id')->references('id')->on('items')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreign('tipo_precio_id')->references('id')->on('tipo_precios')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

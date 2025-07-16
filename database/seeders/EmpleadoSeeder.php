@@ -20,7 +20,6 @@ class EmpleadoSeeder extends Seeder
                 'tipo_documento_id' => 1, // Assuming 1 is the ID for 'DNI'
                 'direccion' => 'Calle Falsa 123',
                 'telefono' => '1234567890',
-                'email' => 'email@gmail.com',
                 'empleado_cargo_id' => 1, // Assuming 1 is the ID for 'Gerente'
                 'user_id' => 1, // Assuming 1 is the ID for an existing user
                 'empresa_id' => 1 // Assuming 1 is the ID for an existing company

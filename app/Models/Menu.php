@@ -12,13 +12,10 @@ class Menu extends Model
     protected $table = "menus";
     protected $primaryKey = "id";
     protected $fillable = [
-        'id',
         'title',
         'ruta',
         'icon',
-        'isMain',
-        'created_at',
-        'updated_at'
+        'isMain'
     ];
     public function submenus()
     {

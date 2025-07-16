@@ -15,7 +15,7 @@ import UtilsServices from '@/Services/UtilsServices.js';
 import { type BreadcrumbItem } from '@/types';
 import { Head } from '@inertiajs/vue3';
 import { onMounted, reactive, ref } from 'vue';
-import { type Cliente } from '@/types/Cliente';
+import { type Cliente } from '@/Data/Cliente';
 
 const model_service = ClienteService;
 const model_path = model_service.path_url;

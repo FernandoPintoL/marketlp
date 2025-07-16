@@ -15,12 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('num_id')->unique();
-            $table->string('telefono')->nullable();
             $table->string('email')->nullable();
+            $table->string('telefono')->nullable();
             $table->string('direccion')->nullable();
             $table->string('photo_path')->nullable();
             $table->timestamps();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('tipo_documento_id')->constrained('tipo_documentos')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }

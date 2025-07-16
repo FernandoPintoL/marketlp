@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('tipo_cambios', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('moneda_origen_id')->constrained('monedas')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('moneda_destino_id')->constrained('monedas')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('moneda_origen_id')->nullable()->constrained('monedas')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('moneda_destino_id')->nullable()->constrained('monedas')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamp('fecha')->nullable();
             $table->decimal('tasa_cambio', 12, 6)->default(1.0000);
             $table->decimal('tasa_inversa', 12, 6)->default(1.0000);

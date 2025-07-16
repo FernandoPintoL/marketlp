@@ -11,9 +11,9 @@ import { onMounted, reactive, ref } from 'vue';
 import { route } from 'ziggy-js';
 import { Pencil, DiamondPlus } from 'lucide-vue-next';
 import EmpleadoService from '@/Services/EmpleadoService';
-import type { Empleado } from '@/types/Empleado';
-import type { EmpleadoCargo } from '@/types/EmpleadoCargo';
-import type { TipoDocumento } from '@/types/TipoDocumento';
+import type { Empleado } from '@/Data/Empleado';
+import type { EmpleadoCargo } from '@/Data/EmpleadoCargo';
+import type { TipoDocumento } from '@/Data/TipoDocumento';
 
 const model_service = EmpleadoService;
 const model_path = model_service.path_url;

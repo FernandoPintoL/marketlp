@@ -15,15 +15,12 @@ class Inventario extends Model
     protected $fillable = [
         'item_id',
         'almacen_id',
-        'ubicacion_item_id',
         'lote',
         'fecha_vencimiento',
         'cantidad_disponible',
         'cantidad_reservada',
         'cantidad_apartada',
-        'fecha_ultima_actualizacion',
-        'created_at',
-        'updated_at'
+        'fecha_ultima_actualizacion'
     ];
     public function item()
     {

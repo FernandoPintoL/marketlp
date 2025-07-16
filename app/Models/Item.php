@@ -13,14 +13,11 @@ class Item extends Model
     protected $primaryKey = "id";
     public $timestamps = true;
     protected $fillable = [
-        'cod_barra',
         'name',
         'descripcion',
         'photo_path',
         'categoria_id',
-        'unidad_id',
-        'created_at',
-        'updated_at'
+        'unidad_id'
     ];
     public function categoria()
     {

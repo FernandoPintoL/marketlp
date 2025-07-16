@@ -16,9 +16,7 @@ class CajaEmpleado extends Model
         'caja_id',
         'empleado_id',
         'fecha_asignacion',
-        'estado',
-        'created_at',
-        'updated_at',
+        'estado'
     ];
     public function caja()
     {

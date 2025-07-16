@@ -12,12 +12,9 @@ class CodigoItems extends Model
     protected $table = "codigo_items";
     protected $primaryKey = "id";
     protected $fillable = [
-        'id',
         'item_id',
         'tipo_codigo_id',
-        'codigo',
-        'created_at',
-        'updated_at'
+        'codigo'
     ];
     public function item()
     {

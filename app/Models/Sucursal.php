@@ -13,8 +13,7 @@ class Sucursal extends Model
     protected $primaryKey = "id";
     public $timestamps = true;
     protected $fillable = [
-        'codigo',
-        'nombre',
+        'name',
         'direccion',
         'telefono',
         'email',
@@ -22,8 +21,7 @@ class Sucursal extends Model
         'empleado_id',
         'es_matriz',
         'estado',
-        'created_at',
-        'updated_at'
+        'photo_path'
     ];
     public function empresa()
     {
@@ -32,9 +30,5 @@ class Sucursal extends Model
     public function empleado()
     {
         return $this->belongsTo(Empleado::class, 'empleado_id');
-    }
-    public function almacenes()
-    {
-        return $this->hasMany(Almacen::class, 'sucursal_id');
     }
 }

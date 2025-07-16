@@ -5,62 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Caja;
 use App\Http\Requests\StoreCajaRequest;
 use App\Http\Requests\UpdateCajaRequest;
+use App\Traits\CrudController;
 
 class CajaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use CrudController;
+    public Caja $model;
+    public string $rutaVisita = 'Caja';
+    public function __construct()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreCajaRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Caja $caja)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Caja $caja)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateCajaRequest $request, Caja $caja)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Caja $caja)
-    {
-        //
+        $this->model = new Caja();
     }
 }

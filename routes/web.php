@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+
 use App\Http\Controllers\{
     AjustesController,
     AlmacenController,
@@ -23,18 +24,13 @@ use App\Http\Controllers\{
 };
 
 
-
-// Public routes
 Route::get('/', function () {
-    // Get featured products to display on the welcome page
-    $items = \App\Models\Item::with(['categoria', 'precioItems' => function($query) {
-        $query->where('tipo_precio_id', 1); // Assuming 1 is the default price type
-    }])->take(12)->get();
-
-    return Inertia::render('Welcome', [
-        'items' => $items
-    ]);
+    return Inertia::render('Welcome');
 })->name('home');
+
+Route::get('dashboard', function () {
+    return Inertia::render('Dashboard');
+})->middleware(['auth', 'verified'])->name('dashboard');
 
 // Protected routes
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -64,11 +60,19 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // Resource routes
     foreach ($resources as $key => $controller) {
         Route::resource("/$key", $controller);
-        Route::post("/$key/query", [$controller, 'query'])->name("$key.query");
     }
 
-    // Additional routes for Venta, Compra, and Proforma
-    Route::resource('/venta', \App\Http\Controllers\VentaController::class);
+    // Role and Permission Management Routes
+    Route::get('/roles/permissions', [RolesController::class, 'getAllPermissions'])->name('roles.permissions');
+    Route::get('/roles/{role}/permissions', [RolesController::class, 'getRolePermissions'])->name('roles.getPermissions');
+    Route::post('/roles/{role}/permissions', [RolesController::class, 'assignPermissions'])->name('roles.assignPermissions');
+
+    Route::get('/users/roles', [UserController::class, 'getAllRoles'])->name('users.roles');
+    Route::get('/users/{user}/roles', [UserController::class, 'getUserRoles'])->name('users.getRoles');
+    Route::post('/users/{user}/roles', [UserController::class, 'assignRoles'])->name('users.assignRoles');
+
+    // Additional routes for Venta, Compra, and Pro forma
+    /*Route::resource('/venta', \App\Http\Controllers\VentaController::class);
     Route::post('/venta/query', [\App\Http\Controllers\VentaController::class, 'query'])->name('venta.query');
 
     Route::resource('/compra', \App\Http\Controllers\CompraController::class);
@@ -76,7 +80,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('/proforma', \App\Http\Controllers\ProformaController::class);
     Route::post('/proforma/query', [\App\Http\Controllers\ProformaController::class, 'query'])->name('proforma.query');
-    Route::post('/proforma/{proforma}/convert-to-venta', [\App\Http\Controllers\ProformaController::class, 'convertToVenta'])->name('proforma.convert-to-venta');
+    Route::post('/proforma/{proforma}/convert-to-venta', [\App\Http\Controllers\ProformaController::class, 'convertToVenta'])->name('proforma.convert-to-venta');*/
 });
 
 require __DIR__.'/settings.php';

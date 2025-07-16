@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('href');
-            $table->string('icon');
+            $table->string('icon')->nullable();
             $table->boolean('isMain')->default(true);
             $table->timestamps();
         });

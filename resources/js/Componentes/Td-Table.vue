@@ -32,7 +32,6 @@ const props = defineProps({
         <div class="block">
             <small>Actualizado: </small> <b>{{ props.actualizado }}</b>
         </div>
-<!--        <br/>-->
         <a :href="route(props.model_path + '.edit', props.itemId)"
            class="inline-flex gap-2 p-2 mr-2 text-xs font-thin text-center text-white rounded-lg bg-green-700 hover:bg-green-800 focus:ring-4 focus:ring-blue-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
             <Pencil class="h-4 w-4 text-white" />

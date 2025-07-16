@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('almacen_id')->constrained("almacens")->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('codigo')->default('Sin nombre');
-            $table->string('nombre')->nullable();
+            $table->string('name')->nullable();
             $table->string('descripcion')->nullable();
             $table->double('maximo')->default(0)->nullable();
             $table->double('minimo')->default(0)->nullable();

@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('ubicacion_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('sector_id')->constrained('sectors')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('tipo_ubicacion_items_id')->nullable()->constrained('tipo_ubicacion_items')->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('codigo')->default('Almacen sin nombre');
             $table->decimal('capacidad', 10, 2)->default(0);
             $table->string('estado')->nullable();
             $table->timestamps();
-            $table->foreignId('tipo_ubicacion_items_id')->nullable()->constrained('tipo_ubicacion_items')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

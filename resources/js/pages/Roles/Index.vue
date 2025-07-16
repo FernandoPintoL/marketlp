@@ -28,7 +28,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const props = defineProps({
     listado: {
-        type: Array as () => Array<{ id: number, sigla: string, detalle: string, created_at: string, updated_at: string }>,
+        type: Array as () => Array<{ id: number, name: string, guard_name: string, created_at: string, updated_at: string }>,
         default: () => [],
     },
     crear: {
@@ -46,14 +46,14 @@ const props = defineProps({
 });
 
 const datas = reactive({
-    list: [] as Array<{ id: number, sigla: string, detalle: string, created_at: string, updated_at: string }>,
+    list: [] as Array<{ id: number, name: string, guard_name: string, created_at: string, updated_at: string }>,
     isLoad: false,
     dateStart: '',
     dateEnd: '',
     messageList: '',
     metodoList: '',
-    siglaError: '',
-    detalleError: '',
+    nameError: '',
+    guard_nameError: '',
     currentPage: 1,
     lastPages: 1,
     totalItems: 0,
@@ -160,10 +160,10 @@ const refreshTable = () => {
                             ID
                         </th>
                         <th scope="col" class="p-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                            Sigla
+                            Nombre
                         </th>
                         <th scope="col" class="p-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
-                            Detalle
+                            Guard Name
                         </th>
                         <th scope="col" class="p-4 text-left text-xs font-medium uppercase text-gray-500 dark:text-gray-400">
                             Acciones

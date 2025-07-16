@@ -16,14 +16,12 @@ return new class extends Migration
             $table->foreignId('apertura_caja_id')->constrained('apertura_cajas')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('tipo_movimiento_id')->constrained('tipo_movimientos')->cascadeOnUpdate()->cascadeOnDelete();
             $table->decimal('monto', 12, 2)->default(0.00);
-            $table->foreignId('moneda_id')->constrained('monedas')->cascadeOnUpdate()->cascadeOnDelete();
             $table->decimal('tasa_cambio', 12, 6)->default(1.00);
             $table->decimal('monto_moneda_local', 12, 2)->default(0.00);
             $table->timestamp('fecha_movimiento')->default(now());
             $table->string('observaciones')->nullable();
             $table->unsignedBigInteger('referencia_id')->nullable();
             $table->string('tipo_referencia')->nullable(); // Puede ser 'venta', 'compra', 'gasto', etc.
-            $table->foreignId('tipo_pago_id')->constrained('tipo_pagos')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }

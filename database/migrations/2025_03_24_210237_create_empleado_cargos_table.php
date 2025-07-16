@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('empleado_cargos', function (Blueprint $table) {
             $table->id();
-            $table->string('sigla')->default('Sin nombre');
+            $table->string('sigla')->unique();
             $table->string('detalle')->nullable();
             $table->timestamps();
         });

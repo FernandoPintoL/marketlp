@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('apertura_caja_id')->constrained('apertura_cajas')->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('empleado_id')->constrained('empleados')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamp('fecha_arqueo')->default(now());
-            $table->decimal('total_efectivo', 12, 2)->default(0.00);
+            $table->decimal('total_effective', 12, 2)->default(0.00);
             $table->decimal('total_tarjetas', 12, 2)->default(0.00);
             $table->decimal('total_transferencias', 12, 2)->default(0.00);
             $table->decimal('total_cheques', 12, 2)->default(0.00);

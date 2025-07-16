@@ -10,21 +10,22 @@ import TableLayout from '@/Componentes/TableLayout.vue';
 import TdTable from '@/Componentes/Td-Table.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import AlertService from '@/Services/AlertService.js';
-import CategoriaService from '@/Services/CategoriaService.js';
+import { CategoriaNegocio } from '@/Negocio/CategoriaNegocio';
 import UtilsServices from '@/Services/UtilsServices.js';
 import { type BreadcrumbItem } from '@/types';
-import { attributesHead, Categoria, getDefaultAttributes, selectedAttributes } from '@/types/Categoria';
+import { attributesHead, Categoria, getDefaultAttributes, selectedAttributes } from '@/Data/Categoria';
 import { Head } from '@inertiajs/vue3';
 import { Search } from 'lucide-vue-next';
 import { onMounted, reactive, ref } from 'vue';
+import { ParamsConsulta } from '@/Data/PaginacionLaravel';
 
-const model_service = CategoriaService;
-const model_path = model_service.path_url;
+const model_service = new CategoriaNegocio();
+const modelName = model_service.model;
 
 const breadcrumbs: BreadcrumbItem[] = [
     {
-        title: model_path.toUpperCase(),
-        href: '/' + model_path,
+        title: modelName.toUpperCase(),
+        href: '/' + modelName,
     },
 ];
 
@@ -61,6 +62,7 @@ const datas = reactive({
 
 onMounted(() => {
     fetchList();
+    // datas.list = props.listado;
 });
 
 const query = ref('');
@@ -80,11 +82,23 @@ const fetchList = async (page = 1) => {
             return;
         }
     }
-
     datas.isLoad = true;
     const attributes = Object.keys(selectedAttributesReactive).filter((attr) => selectedAttributesReactive[attr]);
-    const response = await model_service.query(query.value, page, datas.perPage, attributes, dateStart.value, dateEnd.value);
-    console.log('response', response.data);
+    const params: ParamsConsulta = {
+        query: query.value,
+        is_query_table: true,
+        page: page,
+        perPage: datas.perPage,
+        attributes: attributes.length > 0 ? attributes : undefined,
+        dateStart: dateStart.value,
+        dateEnd: dateEnd.value,
+    };
+    const response = await model_service.consultar(params);
+    if (response === undefined || response.data === undefined) {
+        AlertService.error('Error al obtener los datos');
+        datas.isLoad = false;
+        return;
+    }
     if (response.data.isSuccess) {
         datas.list = response.data.data.data;
         datas.currentPage = response.data.data.current_page;
@@ -113,7 +127,7 @@ const destroyMessage = (id: number) => {
 };
 
 const destroyData = async (id: number) => {
-    const response = await model_service.destroy(id);
+    const response = await model_service.eliminar(id);
     if (response.data.isSuccess) {
         await AlertService.success('La operación se completo exitosamente!.');
         await queryList('');
@@ -142,19 +156,21 @@ const refreshTable = () => {
 </script>
 
 <template>
-    <Head :title="UtilsServices.capitalizeFirstLetter(model_path)" />
+
+    <Head :title="UtilsServices.capitalizeFirstLetter(modelName)" />
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-4">
-            <div class="mb-1 mt-2 w-full">
-                <HeaderIndex :title="model_path" />
+            <div class="mt-2 mb-1 w-full">
+                <HeaderIndex :title="modelName" />
                 <div class="flex flex-nowrap justify-start gap-6">
-                    <SearchInput :model-path="model_path" v-model="query" @update:query="queryList" @refresh="refreshTable" />
-                    <ButtonsAdd :model_path="model_path" :crear="props.crear" />
+                    <SearchInput :model-path="modelName" v-model="query" @update:query="queryList"
+                        @refresh="refreshTable" />
+                    <ButtonsAdd :model_path="modelName" :crear="props.crear" />
                 </div>
                 <hr class="mt-2" />
                 <div class="space-y-2 p-2 sm:flex sm:flex-nowrap sm:justify-start sm:gap-6">
                     <div>
-                        <h3 class="text-pretty font-semibold">BUSQUEDA POR FECHAS</h3>
+                        <h3 class="font-semibold text-pretty">BUSQUEDA POR FECHAS</h3>
                         <!--                        <input
                                                     type="checkbox"
                                                     id="created_at"
@@ -172,59 +188,42 @@ const refreshTable = () => {
                                                 </label>-->
                         <div class="mt-1.5 flex flex-nowrap justify-start gap-2">
                             <div class="appearance-none">
-                                <label
-                                    for="created_at"
-                                    class="mb-2 flex cursor-pointer items-center text-sm font-medium peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400"
-                                >
-                                    <input
-                                        type="checkbox"
-                                        id="created_at"
+                                <label for="created_at"
+                                    class="mb-2 flex cursor-pointer items-center text-sm font-medium peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400">
+                                    <input type="checkbox" id="created_at"
                                         class="h-5 w-5 appearance-none rounded-md border-2 border-gray-300 checked:border-indigo-600 checked:bg-indigo-600 focus:ring-2 focus:ring-indigo-500"
-                                        v-model="selectedAttributesReactive['created_at']"
-                                    />
-                                    <span class="ml-2 peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400">Busqueda fecha de creación</span>
+                                        v-model="selectedAttributesReactive['created_at']" />
+                                    <span
+                                        class="ml-2 peer-checked:text-indigo-600 dark:peer-checked:text-indigo-400">Busqueda
+                                        fecha de creación</span>
                                 </label>
                             </div>
                             <div>
-                                <input
-                                    type="checkbox"
+                                <input type="checkbox"
                                     class="rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                                    id="updated_at"
-                                    v-model="selectedAttributesReactive['updated_at']"
-                                />
+                                    id="updated_at" v-model="selectedAttributesReactive['updated_at']" />
                                 <label for="updated_at" class="mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                     Busqueda fecha de actualización
                                 </label>
                             </div>
                         </div>
                     </div>
-                    <div
-                        v-show="selectedAttributesReactive['created_at'] || selectedAttributesReactive['updated_at']"
-                        class="flex flex-nowrap justify-start gap-6"
-                    >
+                    <div v-show="selectedAttributesReactive['created_at'] || selectedAttributesReactive['updated_at']"
+                        class="flex flex-nowrap justify-start gap-6">
                         <div>
-                            <label for="start-time" class="text-sm font-medium text-gray-900 dark:text-white"> Fecha Inicio: </label>
-                            <input
-                                type="date"
-                                v-model="dateStart"
-                                id="start-time"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm leading-none text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                            />
+                            <label for="start-time" class="text-sm font-medium text-gray-900 dark:text-white"> Fecha
+                                Inicio: </label>
+                            <input type="date" v-model="dateStart" id="start-time"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm leading-none text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500" />
                         </div>
                         <div>
-                            <label for="end-time" class="text-sm font-medium text-gray-900 dark:text-white"> Fecha Fin: </label>
-                            <input
-                                type="date"
-                                v-model="dateEnd"
-                                id="end-time"
-                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm leading-none text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
-                            />
+                            <label for="end-time" class="text-sm font-medium text-gray-900 dark:text-white"> Fecha Fin:
+                            </label>
+                            <input type="date" v-model="dateEnd" id="end-time"
+                                class="w-full rounded-lg border border-gray-300 bg-gray-50 p-2 text-sm leading-none text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500" />
                         </div>
-                        <button
-                            type="button"
-                            @click="fetchList(1)"
-                            class="rounded-md border border-blue-700 px-2 text-blue-700 hover:bg-blue-700 hover:text-white focus:outline-none focus:ring-4 focus:ring-blue-300 dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800"
-                        >
+                        <button type="button" @click="fetchList(1)"
+                            class="rounded-md border border-blue-700 px-2 text-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:ring-blue-300 focus:outline-none dark:border-blue-500 dark:text-blue-500 dark:hover:bg-blue-500 dark:hover:text-white dark:focus:ring-blue-800">
                             <Search class="h-4 w-4" />
                         </button>
                     </div>
@@ -237,16 +236,14 @@ const refreshTable = () => {
             <TableLayout>
                 <template #thead>
                     <tr class="bg-gray-100 dark:bg-gray-700">
-                        <th v-for="attr in attributesHeadReactive" :key="attr.key" scope="col" class="px-2 py-2 text-left">
+                        <th v-for="attr in attributesHeadReactive" :key="attr.key" scope="col"
+                            class="px-2 py-2 text-left">
                             <p v-if="!attr.isSearch">{{ attr.label }}</p>
                             <label v-else>
-                                <input
-                                    type="checkbox"
+                                <input type="checkbox"
                                     class="rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
-                                    :id="attr.key"
-                                    :disabled="!attr.isSearch"
-                                    v-model="selectedAttributesReactive[attr.key]"
-                                />
+                                    :id="attr.key" :disabled="!attr.isSearch"
+                                    v-model="selectedAttributesReactive[attr.key]" />
                                 {{ attr.label }}
                             </label>
                         </th>
@@ -255,37 +252,27 @@ const refreshTable = () => {
 
                 <template #tbody>
                     <tr v-for="item in datas.list" :key="item.id" class="hover:bg-gray-100 dark:hover:bg-gray-700">
-                        <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                        <td class="p-4 text-base font-medium whitespace-nowrap text-gray-900 dark:text-white">
                             {{ item.id }}
                         </td>
-                        <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                        <td class="p-4 text-base font-medium whitespace-nowrap text-gray-900 dark:text-white">
                             {{ item.sigla }}
                         </td>
-                        <td class="whitespace-nowrap p-4 text-base font-medium text-gray-900 dark:text-white">
+                        <td class="p-4 text-base font-medium whitespace-nowrap text-gray-900 dark:text-white">
                             {{ item.detalle }}
                         </td>
-                        <TdTable
-                            :creado="UtilsServices.fecha(item.created_at)"
-                            :actualizado="UtilsServices.fecha(item.updated_at)"
-                            :model_path="model_path"
-                            :itemId="item.id"
-                            :onDelete="destroyMessage"
-                        ></TdTable>
+                        <TdTable :creado="UtilsServices.fecha(item.created_at)"
+                            :actualizado="UtilsServices.fecha(item.updated_at)" :model_path="modelName"
+                            :itemId="item.id ?? ''" :onDelete="destroyMessage"></TdTable>
                     </tr>
                 </template>
             </TableLayout>
-            <Pagination
-                v-show="datas.list.length > 0"
-                :current-page="datas.currentPage"
-                :total-pages="datas.totalPages"
-                :total-items="datas.totalItems"
-                :last-pages="datas.lastPages"
-                :per-page="datas.perPage"
-                @page-changed="fetchList"
-                @per-page-changed="handlePerPageChange"
-            />
+            <Pagination v-show="datas.list.length > 0" :current-page="datas.currentPage" :total-pages="datas.totalPages"
+                :total-items="datas.totalItems" :last-pages="datas.lastPages" :per-page="datas.perPage"
+                @page-changed="fetchList" @per-page-changed="handlePerPageChange" />
             <div v-if="datas.list.length === 0">
-                <Alert v-if="query.length === 0" :message="'No se encontraron registros'" :path="model_path + '.create'" />
+                <Alert v-if="query.length === 0" :message="'No se encontraron registros'"
+                    :path="modelName + '.create'" />
                 <Alert-Info v-else :message="'No se encontraron registros con: ' + query" />
             </div>
         </div>

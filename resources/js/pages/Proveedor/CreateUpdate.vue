@@ -11,8 +11,8 @@ import { onMounted, reactive, ref } from 'vue';
 import { route } from 'ziggy-js';
 import { Pencil, DiamondPlus } from 'lucide-vue-next';
 import ProveedorService from '@/Services/ProveedorService';
-import type { Proveedor } from '@/types/Proveedor';
-import type { TipoDocumento } from '@/types/TipoDocumento';
+import type { Proveedor } from '@/Data/Proveedor';
+import type { TipoDocumento } from '@/Data/TipoDocumento';
 
 const model_service = ProveedorService;
 const model_path = model_service.path_url;

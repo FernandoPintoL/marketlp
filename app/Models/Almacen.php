@@ -14,11 +14,8 @@ class Almacen extends Model
     public $timestamps = true;
     protected $fillable = [
         'sigla',
-        'nombre',
+        'name',
         'direccion',
-        'telefono',
-        'created_at',
-        'updated_at',
         'empleado_id',
         'sucursal_id',
     ];

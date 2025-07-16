@@ -15,9 +15,7 @@ class PrecioItems extends Model
     protected $fillable = [
         'item_id',
         'tipo_precio_id',
-        'precio',
-        'created_at',
-        'updated_at'
+        'precio'
     ];
     public function item()
     {

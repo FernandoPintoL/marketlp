@@ -2,81 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreCategoriaRequest;
-use App\Http\Requests\UpdateCategoriaRequest;
-use App\Models\Categoria;
+use App\Http\Requests\StoreUserRequest;
+use App\Http\Requests\UpdateUserRequest;
+use App\Models\Roles;
 use App\Models\User;
 use App\Services\PermissionService;
 use App\Services\ResponseService;
+use App\Traits\CrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class UserController extends Controller
 {
+    use CrudController;
     public User $model;
     public $rutaVisita = 'User';
     public function __construct()
     {
         $this->model = new User();
-        /*$this->middleware('permission:almacen-list', ['only' => ['index', 'show']]);
-        $this->middleware('permission:almacen-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:almacen-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:almacen-delete', ['only' => ['destroy']]);*/
     }
-
-    public function query(Request $request)
-    {
-        try {
-            $queryStr = $request->get('query', '');
-            $perPage = $request->get('perPage', 10);
-            $page = $request->get('page', 1);
-            $attributes = $request->get('attributes', ['id']); // Atributos por defecto
-            $dateStart = $request->get('dateStart', '');
-            $dateEnd = $request->get('dateEnd', '');
-
-            // Obtener los atributos del modelo
-            $modelAttributes = $this->model->getFillable();
-
-            // Validar que los atributos estén en la lista de atributos permitidos
-            foreach ($attributes as $attribute) {
-                if (!in_array($attribute, $modelAttributes)) {
-                    return ResponseService::error('Atributo no permitido: ' . $attribute, '', 400);
-                }
-            }
-
-            // Construir la consulta dinámica
-            $query = $this->model::query();
-            $first = true;
-            // Filtrar por fechas solo created_at esta en el array de atributos
-            if (in_array('created_at', $attributes)) {
-                $query->whereBetween('created_at', [$dateStart, $dateEnd]);
-            }
-            if (in_array('updated_at', $attributes)) {
-                $query->whereBetween('updated_at', [$dateStart, $dateEnd]);
-            }
-            foreach ($attributes as $attribute) {
-                if ($first) {
-                    if (!in_array($attribute, ['created_at', 'updated_at'])) {
-                        $query->where($attribute, 'LIKE', '%' . $queryStr . '%');
-                    }
-                    $first = false;
-                } else {
-                    if (!in_array($attribute, ['created_at', 'updated_at'])) {
-                        $query->orWhere($attribute, 'LIKE', '%' . $queryStr . '%');
-                    }
-                }
-            }
-            $response = $query->orderBy('id', 'ASC')
-                ->paginate($perPage, ['*'], 'page', $page);
-            $cantidad = count($response);
-            $str = strval($cantidad);
-            return ResponseService::success("$str datos encontrados con $queryStr", $response);
-        } catch (\Exception $e) {
-            return ResponseService::error($e->getMessage(), '', $e->getCode());
-        }
-    }
-
     /**
      * Display a listing of the resource.
      */
@@ -149,17 +94,43 @@ class UserController extends Controller
             return ResponseService::error('Error al actualizar el registro', $e->getMessage());
         }
     }
-
     /**
-     * Remove the specified resource from storage.
+     * Get all roles
      */
-    public function destroy(User $user)
+    public function getAllRoles()
     {
         try {
-            $user->delete();
-            return ResponseService::success('Registro eliminado correctamente');
+            $roles = Roles::all();
+            return ResponseService::success('Roles obtenidos correctamente', $roles);
         } catch (\Exception $e) {
-            return ResponseService::error('Error al eliminar el registro', $e->getMessage());
+            return ResponseService::error('Error al obtener los roles', $e->getMessage());
+        }
+    }
+
+    /**
+     * Get roles for a specific user
+     */
+    public function getUserRoles(User $user)
+    {
+        try {
+            $userRoles = $user->roles()->pluck('id')->toArray();
+            return ResponseService::success('Roles del usuario obtenidos correctamente', $userRoles);
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al obtener los roles del usuario', $e->getMessage());
+        }
+    }
+
+    /**
+     * Assign roles to a user
+     */
+    public function assignRoles(Request $request, User $user)
+    {
+        try {
+            $roles = $request->input('roles', []);
+            $user->roles()->sync($roles);
+            return ResponseService::success('Roles asignados correctamente', $user->roles);
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al asignar los roles', $e->getMessage());
         }
     }
 }

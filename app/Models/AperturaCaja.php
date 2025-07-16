@@ -13,8 +13,7 @@ class AperturaCaja extends Model
     protected $primaryKey = 'id';
     public $timestamps = true;
     protected $fillable = [
-        'caja_id',
-        'empleado_id',
+        'caja_empleado_id',
         'fecha_apertura',
         'hora_apertura',
         'saldo_inicial',
@@ -22,15 +21,9 @@ class AperturaCaja extends Model
         'estado',
         'observaciones_apertura',
         'observaciones_cierre',
-        'created_at',
-        'updated_at',
     ];
-    public function caja()
+    public function cajaEmpleado()
     {
-        return $this->belongsTo(Caja::class, 'caja_id');
-    }
-    public function empleado()
-    {
-        return $this->belongsTo(Empleado::class, 'empleado_id');
+        return $this->belongsTo(CajaEmpleado::class, 'caja_empleado_id');
     }
 }

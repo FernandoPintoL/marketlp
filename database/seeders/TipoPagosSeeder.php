@@ -16,31 +16,45 @@ class TipoPagosSeeder extends Seeder
         $tiposPagos = [
             [
                 'sigla' => 'EFEC',
-                'detalle' => 'Efectivo'
+                'detalle' => 'Efectivo',
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'sigla' => 'TARJ',
-                'detalle' => 'Tarjeta de Crédito/Débito'
+                'detalle' => 'Tarjeta de Crédito/Débito',
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'sigla' => 'CHEQ',
-                'detalle' => 'Cheque'
+                'detalle' => 'Cheque',
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'sigla' => 'DEP',
-                'detalle' => 'Depósito Bancario'
+                'detalle' => 'Depósito Bancario',
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'sigla' => 'TRA',
-                'detalle' => 'Transferencia Electrónica'
+                'detalle' => 'Transferencia Electrónica',
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'sigla' => 'CRE',
-                'detalle' => 'Credito'
+                'detalle' => 'Credito',
+                'created_at' => now(),
+                'updated_at' => now()
             ],
             [
                 'sigla' => 'OTRO',
-                'detalle' => 'Otro'
+                'detalle' => 'Otro',
+                'created_at' => now(),
+                'updated_at' => now()
             ]
         ];
         foreach ($tiposPagos as $tipoPago) {

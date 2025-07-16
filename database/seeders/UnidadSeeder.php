@@ -50,7 +50,8 @@ class UnidadSeeder extends Seeder
                 'updated_at' => date_create('now')->format('Y-m-d H:i:s')
             ]
         ];
-
-        \DB::table('unidads')->insert($arrays_unidad);
+        foreach ($arrays_unidad as $unidad) {
+            \App\Models\Unidad::create($unidad);
+        }
     }
 }

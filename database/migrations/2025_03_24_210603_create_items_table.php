@@ -13,15 +13,12 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('cod_barra')->default('0000000000000')->nullable();
-            $table->string('name')->default('Item')->nullable();
-            $table->string('descripcion')->default(' ')->nullable();
-            $table->string('photo_path')->default(' ')->nullable();
-            $table->unsignedBigInteger('categoria_id')->nullable();
-            $table->unsignedBigInteger('unidad_id')->nullable();
+            $table->string('name')->unique();
+            $table->string('descripcion')->nullable();
+            $table->string('photo_path')->nullable();
+            $table->foreignId('categoria_id')->constrained('categorias')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('unidad_id')->constrained('unidads')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
-            $table->foreign('categoria_id')->references('id')->on('categorias')->onDelete('set null')->onUpdate('set null');
-            $table->foreign('unidad_id')->references('id')->on('unidads')->onDelete('set null')->onUpdate('set null');
         });
     }
 

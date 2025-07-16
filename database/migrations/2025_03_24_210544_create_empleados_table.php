@@ -13,16 +13,15 @@ return new class extends Migration
     {
         Schema::create('empleados', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->default('Sin nombre');
-            $table->string('num_id')->nullable();
+            $table->string('name')->unique();
+            $table->string('num_id')->unique();
             $table->string("direccion")->nullable();
             $table->string("telefono")->nullable();
-            $table->string("email")->nullable();
             $table->timestamps();
             $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('tipo_documento_id')->constrained('tipo_documentos')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('empleado_cargo_id')->constrained('empleado_cargos')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnUpdate()->cascadeOnDelete();
         });
     }
 

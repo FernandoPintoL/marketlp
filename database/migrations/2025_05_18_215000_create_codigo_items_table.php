@@ -13,12 +13,10 @@ return new class extends Migration
     {
         Schema::create('codigo_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('item_id')->nullable();
-            $table->unsignedBigInteger('tipo_codigo_id')->nullable();
-            $table->string('codigo')->default('');
+            $table->foreignId('item_id')->constrained('items')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('tipo_codigo_id')->constrained('tipo_codigos')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('codigo')->default('0000000000000')->nullable();
             $table->timestamps();
-            $table->foreign('item_id')->references('id')->on('items')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreign('tipo_codigo_id')->references('id')->on('tipo_codigos')->cascadeOnDelete()->cascadeOnUpdate();
         });
     }
 

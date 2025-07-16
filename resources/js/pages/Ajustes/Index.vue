@@ -15,7 +15,7 @@ import TableLayout from '@/Componentes/TableLayout.vue';
 import ButtonsAdd from '@/Componentes/ButtonsAdd.vue';
 import Pagination from '@/Componentes/Pagination.vue';
 import AjustesService from '@/Services/AjustesService';
-import { Ajuste } from '@/types/Ajuste';
+import { Ajuste } from '@/Data/Ajuste';
 
 const model_service = AjustesService;
 const model_path = model_service.path_url;

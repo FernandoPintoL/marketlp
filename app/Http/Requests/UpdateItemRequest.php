@@ -23,7 +23,12 @@ class UpdateItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'cod_barra' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'descripcion' => 'nullable|string',
+            'photo_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024', // max 1MB
+            'categoria_id' => 'required|exists:categorias,id',
+            'unidad_id' => 'required|exists:unidads,id',
         ];
     }
 }

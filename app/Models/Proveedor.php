@@ -17,12 +17,9 @@ class Proveedor extends Model
         'num_id',
         'direccion',
         'telefono',
-        'email',
         'contacto',
         'tipo_documento_id',
-        'created_at',
-        'updated_at',
-        'empresa_id',
+        'empresa_id'
     ];
     public function tipoDocumento()
     {

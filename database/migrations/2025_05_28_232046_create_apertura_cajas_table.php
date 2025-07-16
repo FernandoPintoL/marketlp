@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('apertura_cajas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('caja_id')->constrained('cajas')->cascadeOnUpdate()->cascadeOnDelete();
-            $table->foreignId('empleado_id')->constrained('empleados')->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('caja_empleado_id')->constrained('caja_empleados')->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamp('fecha_apertura')->default(now());
             $table->timestamp('fecha_cierre')->nullable();
             $table->decimal('saldo_inicial', 12, 2)->default(0.00);

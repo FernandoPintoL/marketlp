@@ -17,9 +17,7 @@ class UbicacionItem extends Model
         'codigo',
         'capacidad',
         'estado',
-        'tipo_ubicacion_items_id',
-        'created_at',
-        'updated_at'
+        'tipo_ubicacion_items_id'
     ];
     public function tipoUbicacion()
     {

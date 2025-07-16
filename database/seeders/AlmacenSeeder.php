@@ -17,7 +17,7 @@ class AlmacenSeeder extends Seeder
         Almacen::create([
             'empleado_id' => 1,
             'sigla' => 'ALM',
-            'nombre' => 'Almacen Principal',
+            'name' => 'Almacen Principal',
             'direccion' => 'Av. Principal 123',
             'created_at' => date_create('now')->format('Y-m-d H:i:s'),
             'updated_at' => date_create('now')->format('Y-m-d H:i:s'),
@@ -27,7 +27,7 @@ class AlmacenSeeder extends Seeder
         Almacen::create([
             'empleado_id' => 1,
             'sigla' => 'SVT',
-            'nombre' => 'Sala de Ventas',
+            'name' => 'Sala de Ventas',
             'direccion' => 'Av. Principal 123',
             'created_at' => date_create('now')->format('Y-m-d H:i:s'),
             'updated_at' => date_create('now')->format('Y-m-d H:i:s'),

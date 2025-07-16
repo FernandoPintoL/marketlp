@@ -2,22 +2,17 @@
 
 namespace App\Models;
 
+use App\Interfaz\CategorizacionInterface;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TipoPrecio extends Model
+class TipoPrecio extends Model implements CategorizacionInterface
 {
     /** @use HasFactory<\Database\Factories\TipoPrecioFactory> */
-    use HasFactory;
+    use HasFactory, Categorizacion;
     protected $table = "tipo_precios";
     protected $primaryKey = "id";
     public $timestamps = true;
-    protected $fillable = [
-        'sigla',
-        'detalle',
-        'created_at',
-        'updated_at'
-    ];
     public function items()
     {
         return $this->hasMany(Item::class, 'tipo_precio_id');
@@ -25,5 +20,13 @@ class TipoPrecio extends Model
     public function precios()
     {
         return $this->hasMany(PrecioItems::class, 'tipo_precio_id');
+    }
+    public function getSigla(): string
+    {
+        return $this->sigla;
+    }
+    public function getDetalle(): string
+    {
+        return $this->detalle;
     }
 }

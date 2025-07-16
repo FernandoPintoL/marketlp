@@ -15,12 +15,10 @@ class Sector extends Model
     protected $fillable = [
         'almacen_id',
         'codigo',
-        'nombre',
+        'name',
         'descripcion',
         'maximo',
         'minimo',
-        'created_at',
-        'updated_at'
     ];
     public function almacen()
     {

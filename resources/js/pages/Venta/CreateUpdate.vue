@@ -597,24 +597,24 @@ const formatCurrency = (value) => {
                             <table class="w-full">
                                 <thead>
                                     <tr class="bg-gray-100">
-                                        <th class="px-4 py-2 text-left">Producto</th>
-                                        <th class="px-4 py-2 text-right">Cantidad</th>
-                                        <th class="px-4 py-2 text-right">Precio</th>
-                                        <th class="px-4 py-2 text-right">Subtotal</th>
-                                        <th class="px-4 py-2 text-right">Descuento</th>
-                                        <th class="px-4 py-2 text-right">Total</th>
-                                        <th class="px-4 py-2 text-center">Acciones</th>
+                                        <th class="text-left">Producto</th>
+                                        <th class="text-right">Cantidad</th>
+                                        <th class="text-right">Precio</th>
+                                        <th class="text-right">Subtotal</th>
+                                        <th class="text-right">Descuento</th>
+                                        <th class="text-right">Total</th>
+                                        <th class="text-center">Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr v-for="(detalle, index) in form.detalles" :key="index" class="border-b">
-                                        <td class="px-4 py-2">{{ detalle.item ? detalle.item.nombre : 'N/A' }}</td>
-                                        <td class="px-4 py-2 text-right">{{ detalle.cantidad }}</td>
-                                        <td class="px-4 py-2 text-right">{{ formatCurrency(detalle.precio_unitario) }}</td>
-                                        <td class="px-4 py-2 text-right">{{ formatCurrency(detalle.subtotal) }}</td>
-                                        <td class="px-4 py-2 text-right">{{ formatCurrency(detalle.descuento) }}</td>
-                                        <td class="px-4 py-2 text-right">{{ formatCurrency(detalle.total) }}</td>
-                                        <td class="px-4 py-2 text-center">
+                                        <td class="">{{ detalle.item ? detalle.item.nombre : 'N/A' }}</td>
+                                        <td class="text-right">{{ detalle.cantidad }}</td>
+                                        <td class="text-right">{{ formatCurrency(detalle.precio_unitario) }}</td>
+                                        <td class="text-right">{{ formatCurrency(detalle.subtotal) }}</td>
+                                        <td class="text-right">{{ formatCurrency(detalle.descuento) }}</td>
+                                        <td class="text-right">{{ formatCurrency(detalle.total) }}</td>
+                                        <td class="text-center">
                                             <button
                                                 type="button"
                                                 class="btn btn-sm btn-danger"
@@ -625,7 +625,7 @@ const formatCurrency = (value) => {
                                         </td>
                                     </tr>
                                     <tr v-if="form.detalles.length === 0">
-                                        <td colspan="7" class="px-4 py-2 text-center">No hay productos agregados</td>
+                                        <td colspan="7" class="text-center">No hay productos agregados</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -639,7 +639,7 @@ const formatCurrency = (value) => {
 
 <style scoped>
 .btn {
-    @apply px-4 py-2 rounded-md text-white font-medium;
+    @apply rounded-md text-white font-medium;
 }
 .btn-primary {
     @apply bg-blue-600 hover:bg-blue-700;
@@ -648,7 +648,7 @@ const formatCurrency = (value) => {
     @apply bg-green-600 hover:bg-green-700;
 }
 .btn-sm {
-    @apply px-2 py-1 text-sm;
+    @apply text-sm;
 }
 .btn-danger {
     @apply bg-red-500 hover:bg-red-600;
@@ -663,6 +663,6 @@ const formatCurrency = (value) => {
     @apply block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm;
 }
 .form-value {
-    @apply block w-full py-2 px-3 bg-gray-100 rounded-md text-gray-700 font-medium;
+    @apply block w-full bg-gray-100 rounded-md text-gray-700 font-medium;
 }
 </style>

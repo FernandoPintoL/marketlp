@@ -13,16 +13,13 @@ return new class extends Migration
     {
         Schema::create('clientes', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->default('Sin nombre');
+            $table->string('name')->nullable();
             $table->string('num_id')->nullable();
-            $table->unsignedBigInteger('tipo_documento_id')->nullable();
             $table->string("direccion")->nullable();
             $table->string("telefono")->nullable();
-            $table->string("email")->nullable();
-            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreignId('tipo_documento_id')->constrained('tipo_documentos')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
-            $table->foreign('tipo_documento_id')->references('id')->on('tipo_documentos')->onDelete('set null')->onUpdate('set null');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('set null')->onUpdate('set null');
         });
     }
 

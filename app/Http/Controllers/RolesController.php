@@ -2,79 +2,25 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categoria;
+use App\Models\Permissions;
 use App\Models\Roles;
 use App\Http\Requests\StoreRolesRequest;
 use App\Http\Requests\UpdateRolesRequest;
 use App\Services\PermissionService;
 use App\Services\ResponseService;
+use App\Traits\CrudController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class RolesController extends Controller
 {
+    use CrudController;
     public Roles $model;
-    public $rutaVisita = 'Categoria';
+    public $rutaVisita = 'Roles';
     public function __construct()
     {
         $this->model = new Roles();
-        /*$this->middleware('permission:almacen-list', ['only' => ['index', 'show']]);
-        $this->middleware('permission:almacen-create', ['only' => ['create', 'store']]);
-        $this->middleware('permission:almacen-edit', ['only' => ['edit', 'update']]);
-        $this->middleware('permission:almacen-delete', ['only' => ['destroy']]);*/
-    }
-
-    public function query(Request $request)
-    {
-        try {
-            $queryStr = $request->get('query', '');
-            $perPage = $request->get('perPage', 10);
-            $page = $request->get('page', 1);
-            $attributes = $request->get('attributes', ['id']); // Atributos por defecto
-            $dateStart = $request->get('dateStart', '');
-            $dateEnd = $request->get('dateEnd', '');
-
-            // Obtener los atributos del modelo
-            $modelAttributes = $this->model->getFillable();
-
-            // Validar que los atributos estén en la lista de atributos permitidos
-            foreach ($attributes as $attribute) {
-                if (!in_array($attribute, $modelAttributes)) {
-                    return ResponseService::error('Atributo no permitido: ' . $attribute, '', 400);
-                }
-            }
-
-            // Construir la consulta dinámica
-            $query = $this->model::query();
-            $first = true;
-            // Filtrar por fechas solo created_at esta en el array de atributos
-            if (in_array('created_at', $attributes)) {
-                $query->whereBetween('created_at', [$dateStart, $dateEnd]);
-            }
-            if (in_array('updated_at', $attributes)) {
-                $query->whereBetween('updated_at', [$dateStart, $dateEnd]);
-            }
-            foreach ($attributes as $attribute) {
-                if ($first) {
-                    if (!in_array($attribute, ['created_at', 'updated_at'])) {
-                        $query->where($attribute, 'LIKE', '%' . $queryStr . '%');
-                    }
-                    $first = false;
-                } else {
-                    if (!in_array($attribute, ['created_at', 'updated_at'])) {
-                        $query->orWhere($attribute, 'LIKE', '%' . $queryStr . '%');
-                    }
-                }
-            }
-            $response = $query->orderBy('id', 'ASC')
-                ->paginate($perPage, ['*'], 'page', $page);
-            $cantidad = count($response);
-            $str = strval($cantidad);
-            return ResponseService::success("$str datos encontrados con $queryStr", $response);
-        } catch (\Exception $e) {
-            return ResponseService::error($e->getMessage(), '', $e->getCode());
-        }
     }
     /**
      * Display a listing of the resource.
@@ -101,19 +47,6 @@ class RolesController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreRolesRequest $request)
-    {
-        try {
-            $data = $this->model::create($request->all());
-            return ResponseService::success('Registro guardado correctamente', $data);
-        } catch (\Exception $e) {
-            return ResponseService::error('Error al guardar el registro', $e->getMessage());
-        }
-    }
-
-    /**
      * Display the specified resource.
      */
     public function show(Roles $roles)
@@ -137,28 +70,42 @@ class RolesController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Get all permissions
      */
-    public function update(UpdateRolesRequest $request, Roles $roles)
+    public function getAllPermissions()
     {
         try {
-            $roles->update($request->all());
-            return ResponseService::success('Registro actualizado correctamente', $roles);
+            $permissions = Permissions::all();
+            return ResponseService::success('Permisos obtenidos correctamente', $permissions);
         } catch (\Exception $e) {
-            return ResponseService::error('Error al actualizar el registro', $e->getMessage());
+            return ResponseService::error('Error al obtener los permisos', $e->getMessage());
         }
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Get permissions for a specific role
      */
-    public function destroy(Roles $roles)
+    public function getRolePermissions(Roles $role)
     {
         try {
-            $roles->delete();
-            return ResponseService::success('Registro eliminado correctamente');
+            $rolePermissions = $role->permissions()->pluck('id')->toArray();
+            return ResponseService::success('Permisos del rol obtenidos correctamente', $rolePermissions);
         } catch (\Exception $e) {
-            return ResponseService::error('Error al eliminar el registro', $e->getMessage());
+            return ResponseService::error('Error al obtener los permisos del rol', $e->getMessage());
+        }
+    }
+
+    /**
+     * Assign permissions to a role
+     */
+    public function assignPermissions(Request $request, Roles $role)
+    {
+        try {
+            $permissions = $request->input('permissions', []);
+            $role->permissions()->sync($permissions);
+            return ResponseService::success('Permisos asignados correctamente', $role->permissions);
+        } catch (\Exception $e) {
+            return ResponseService::error('Error al asignar los permisos', $e->getMessage());
         }
     }
 }

@@ -5,62 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\TipoProforma;
 use App\Http\Requests\StoreTipoProformaRequest;
 use App\Http\Requests\UpdateTipoProformaRequest;
+use App\Traits\CrudController;
 
 class TipoProformaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    use CrudController;
+    public TipoProforma $model;
+    public string $rutaVisita = 'TipoProforma';
+    public function __construct()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreTipoProformaRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(TipoProforma $tipoProforma)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TipoProforma $tipoProforma)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateTipoProformaRequest $request, TipoProforma $tipoProforma)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(TipoProforma $tipoProforma)
-    {
-        //
+        $this->model = new TipoProforma();
     }
 }

@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('inventarios', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_id')->constrained("items")->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('almacen_id')->constrained("almacens")->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('ubicacion_item_id')->nullable()->constrained("ubicacion_items")->cascadeOnDelete()->cascadeOnUpdate();
+            $table->foreignId('sector_id')->constrained("sectors")->cascadeOnDelete()->cascadeOnUpdate();
             $table->string('lote')->default('Sin lote')->nullable();
             $table->date('fecha_vencimiento')->default(now())->nullable();
             $table->decimal('cantidad_disponible', 10, 2)->default(0);

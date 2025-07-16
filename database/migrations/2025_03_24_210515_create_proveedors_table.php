@@ -14,15 +14,14 @@ return new class extends Migration
         Schema::create('proveedors', function (Blueprint $table) {
             $table->id();
             $table->string('name')->default('Sin nombre');
-            $table->string('num_id')->nullable();
+            $table->string('num_id')->nullable()->default('');
             $table->string('direccion')->nullable();
             $table->string('telefono')->nullable();
             $table->string('email')->nullable();
             $table->string('contacto')->nullable();
-            $table->unsignedBigInteger('tipo_documento_id')->nullable();
-            $table->timestamps();
-            $table->foreign('tipo_documento_id')->references('id')->on('tipo_documentos')->onDelete('set null');
+            $table->foreignId('tipo_documento_id')->constrained('tipo_documentos')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('empresa_id')->constrained('empresas')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->timestamps();
         });
     }
 
